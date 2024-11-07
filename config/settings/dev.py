@@ -8,7 +8,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Load the secret key from an environment variable
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-default-dev-secret-key')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'nazewb@jxtz53zhtn_#ydnwo7z50wrtd=$vdrh+e24^v+nv3(%')
 
 print(f"DEBUG is now: {DEBUG}")
 print(f"ALLOWED_HOSTS are now: {ALLOWED_HOSTS}")
