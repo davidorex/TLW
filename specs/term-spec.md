@@ -3,7 +3,7 @@
 ### Base Configuration
 ```python
 from core.models.abstracts import MetadataModel
-from calendar.models import SchoolYear
+from schoolcalendar.models import SchoolYear
 from django.utils.translation import gettext_lazy as _
 
 Location: calendar/models/term.py

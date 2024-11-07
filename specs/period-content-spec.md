@@ -5,7 +5,7 @@
 from core.models.abstracts import MetadataModel
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from calendar.models import PeriodTemplate
+from schoolcalendar.models import PeriodTemplate
 from django.utils.translation import gettext_lazy as _
 
 Location: calendar/models/period_content.py

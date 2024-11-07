@@ -1,4 +1,4 @@
-# Calendar Model Implementation Requirements
+# ScoholCalendar Model Implementation Requirements
 
 ## AcademicYear
 Required Functionality:

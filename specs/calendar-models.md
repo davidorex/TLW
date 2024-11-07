@@ -1,4 +1,4 @@
-# Calendar Framework Models
+# SchoolCalendar Framework Models
 
 ## Core Principle
 Date-based calculations over relationship traversal, with patterns defining structure.
