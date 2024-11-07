@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'import_export',
 
     # Local apps
+    'core',
 ]
 
 # Ensure django.contrib.staticfiles and django.contrib.admin are in INSTALLED_APPS
@@ -183,5 +184,3 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 # Message settings
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
-
-
