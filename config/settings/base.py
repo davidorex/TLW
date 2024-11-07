@@ -23,9 +23,15 @@ INSTALLED_APPS = [
 
     # Third-party apps
     'import_export',
+    'rest_framework',
+    'simple_history',
+    'django_filters',
+    'crispy_forms',
+    'allauth',
 
     # Local apps
-    'core',
+    'core.apps.CoreConfig',
+    'schoolcalendar.apps.SchoolCalendarConfig',
 ]
 
 # Ensure django.contrib.staticfiles and django.contrib.admin are in INSTALLED_APPS

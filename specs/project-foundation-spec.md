@@ -1,116 +1,7 @@
 # Foundation Requirements
 
-### requirements.txt
 ```
-# Core
-Django>=4.2,<5.0
-python-dotenv>=1.0.0
-psycopg2-binary>=2.9.9
-
-# Models/DB
-django-model-utils>=4.3.1
-django-simple-history>=3.4.0
-django-safedelete>=1.3.1
-django-fsm>=2.8.1
-
-# API/Forms
-djangorestframework>=3.14.0
-django-filter>=23.5
-django-crispy-forms>=2.0
-
-# Security/Auth
-django-allauth>=0.57.0
-django-permissions-policy>=4.18.0
-
-# Cache/Performance
-redis>=5.0.1
-django-redis>=5.4.0
-
-# Development
-django-debug-toolbar>=4.2.0
-django-extensions>=3.2.3
-pytest-django>=4.7.0
-factory-boy>=3.3.0
-```
-
-### .gitignore
-```
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-Icon
-._*
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-.com.apple.timemachine.donotpresent
-
-# Python
-*.py[cod]
-__pycache__/
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Django
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-media/
-staticfiles/
-
-# Environment
-.env
-.env.*
-!.env.example
-.venv
-venv/
-ENV/
-
-# IDE - VS Code
-.vscode/
-*.code-workspace
-
-# IDE - PyCharm
-.idea/
-*.iml
-*.iws
-.idea_modules/
-
-# Coverage/Tests
-htmlcov/
-.tox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-```
-
-### Directory Layout
+### Directory Layout -- do not create directories that already exist. create directories only if they do not already exist. If files exist in the directories, do not overwrite or delete existing content in them. If existing content needs to be edited to bring in line with spec, get explicity confirmation from user. if content in files already meets spec requirements, report that spec is satisfied for that element.
 ```
 project_root/
 ├── config/               # Project configuration
@@ -124,24 +15,18 @@ project_root/
 │   │   └── mixins.py
 │   ├── utils/
 │   └── views/
-├── calendar/             # Calendar app
+├── schoolcalendar/             # Calendar app
 │   ├── models/
 │   ├── views/
 │   ├── api/
 │   └── templates/
 ├── static/
 ├── templates/
-├── requirements/
-│   ├── base.txt
-│   ├── dev.txt
-│   └── prod.txt
+├── requirements.py
 ├── manage.py
-├── pytest.ini
-├── .env.example
-└── README.md
 ```
 
-### Core App Registration
+### Core App Registration -- Confirm the following lines exist in config/settings/base.py -- if they do not exist, add the line while deleting nothing.
 ```python
 # config/settings/base.py
 
@@ -163,7 +48,7 @@ INSTALLED_APPS = [
     
     # Local apps
     'core.apps.CoreConfig',  # Must be loaded first
-    'calendar.apps.CalendarConfig',
+    'schoolcalendar.apps.CalendarConfig',
     # Other local apps...
 ]
 
