@@ -10,6 +10,22 @@ from django.utils import timezone
 from core.models.abstracts import MetadataModel
 from .school_year import SchoolYear
 
+# Utility function to get or create default school year
+def get_or_create_default_school_year():
+    """
+    Creates a default school year if no school year exists.
+    Uses the current year as the basis.
+    """
+    current_year = timezone.now().year
+    school_year, created = SchoolYear.objects.get_or_create(
+        name=f'{current_year}-{current_year+1}',
+        defaults={
+            'start_date': timezone.now().date().replace(month=8, day=1),  # Typical school year start
+            'end_date': timezone.now().date().replace(month=6, day=30)  # Typical school year end
+        }
+    )
+    return school_year
+
 # Cache key constants
 CACHE_KEYS = {
     'term_weeks': 'term:{id}:weeks',
@@ -75,7 +91,7 @@ class Term(MetadataModel):
     """
 
     TERM_TYPES = [
-        ('SEM1', _('Semester 1)),
+        ('SEM1', _('Semester 1')),
         ('SEM2', _('Semester 2')),
         ('TRI1', _('Trimester 1')),
         ('TRI2', _('Trimester 2')),
@@ -115,6 +131,7 @@ class Term(MetadataModel):
         SchoolYear, 
         on_delete=models.PROTECT, 
         related_name='terms',
+        default=get_or_create_default_school_year,
         help_text="Associated academic year"
     )
 
@@ -122,12 +139,12 @@ class Term(MetadataModel):
         max_length=4, 
         choices=TERM_TYPES, 
         db_index=True,
-        help_text="Type and sequence of term"
+        default='SEM1'
     )
 
     sequence = models.IntegerField(
         validators=[MinValueValidator(1)],
-        default=1,  # Added default value
+        default=1,
         help_text="Order within year (1-based)"
     )
 

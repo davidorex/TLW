@@ -42,10 +42,6 @@ class TermFactory(factory.django.DjangoModelFactory):
         Usage: TermFactory(with_quarters=True)
         """
         if create and extracted and obj.term_type.startswith('SEM'):
-            from .quarter import Quarter
-            from .factories import QuarterFactory
-            
-            # Create two quarters for a semester
             QuarterFactory(term=obj, sequence=1)
             QuarterFactory(term=obj, sequence=2)
 
@@ -54,7 +50,12 @@ class QuarterFactory(factory.django.DjangoModelFactory):
         model = Quarter
 
     term = factory.SubFactory(TermFactory)
-    sequence = factory.Sequence(lambda n: n + 1)
+    
+    sequence = factory.Sequence(lambda n: 1 if n % 2 == 0 else 2)
+    
+    quarter_type = factory.LazyAttribute(
+        lambda obj: f'Q{obj.sequence}'
+    )
     
     start_date = factory.LazyAttribute(
         lambda obj: obj.term.start_date + timezone.timedelta(
@@ -67,6 +68,29 @@ class QuarterFactory(factory.django.DjangoModelFactory):
             days=int((obj.term.end_date - obj.term.start_date).days / 2) - 1
         )
     )
+
+    @factory.post_generation
+    def with_metadata(obj, create, extracted, **kwargs):
+        """
+        Adds sample metadata to the quarter.
+        Usage: QuarterFactory(with_metadata=True)
+        """
+        if create and extracted:
+            obj.metadata = {
+                "reporting_dates": {
+                    "grades_due": str(obj.end_date),
+                    "reports_published": str(obj.end_date + timezone.timedelta(days=7)),
+                    "parent_meetings": {
+                        "start": str(obj.end_date + timezone.timedelta(days=10)),
+                        "end": str(obj.end_date + timezone.timedelta(days=14))
+                    }
+                },
+                "assessment_weeks": [
+                    {"week_number": 1, "type": "formative"},
+                    {"week_number": 4, "type": "summative"}
+                ]
+            }
+            obj.save()
 
 class PeriodTemplateFactory(factory.django.DjangoModelFactory):
     class Meta:

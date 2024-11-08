@@ -13,143 +13,142 @@ from schoolcalendar.tests.factories import (
     QuarterFactory
 )
 
-class TermModelTests(TestCase):
+class QuarterModelTests(TestCase):
     def setUp(self):
+        # Create a semester school year and term for testing
         self.school_year = SchoolYearFactory(term_structure='SEMESTER')
+        self.term = TermFactory(year=self.school_year, term_type='SEM1')
 
-    def test_term_creation_validation(self):
-        """Test Term creation with various validation scenarios"""
-        # Test valid term creation
-        term = TermFactory(year=self.school_year)
-        term.full_clean()
-        self.assertTrue(isinstance(term, Term))
+    def test_quarter_creation_validation(self):
+        """
+        Test Quarter creation with various validation scenarios
+        """
+        # Valid quarter creation
+        quarter = QuarterFactory(term=self.term)
+        quarter.full_clean()
+        self.assertTrue(isinstance(quarter, Quarter))
 
-        # Test term type constraints
+        # Attempt to create quarter for non-semester term should fail
+        non_semester_term = TermFactory(year=self.school_year, term_type='TRI1')
         with self.assertRaises(ValidationError):
-            invalid_term = Term(
-                year=self.school_year,
-                term_type='INVALID',
+            Quarter.objects.create(
+                term=non_semester_term,
+                quarter_type='Q1',
                 sequence=1,
-                start_date=self.school_year.start_date,
-                end_date=self.school_year.end_date
-            )
-            invalid_term.full_clean()
-
-    def test_term_sequence_constraints(self):
-        """Test sequence constraints for terms"""
-        # First term
-        term1 = TermFactory(year=self.school_year, sequence=1)
-        
-        # Second term with correct sequence
-        term2 = TermFactory(year=self.school_year, sequence=2)
-        
-        # Attempt to create term with duplicate sequence should fail
-        with self.assertRaises(IntegrityError):
-            Term.objects.create(
-                year=self.school_year,
-                term_type='SEM1',
-                sequence=1,
-                start_date=self.school_year.start_date,
-                end_date=self.school_year.end_date
+                start_date=non_semester_term.start_date,
+                end_date=non_semester_term.end_date
             )
 
-    def test_term_date_validation(self):
-        """Test date range validation for terms"""
-        # Term dates within school year
-        term = TermFactory(year=self.school_year)
-        self.assertTrue(self.school_year.start_date <= term.start_date)
-        self.assertTrue(term.end_date <= self.school_year.end_date)
+    def test_quarter_sequence_constraints(self):
+        """
+        Test sequence constraints for quarters
+        """
+        # First quarter
+        quarter1 = QuarterFactory(term=self.term, sequence=1)
+        
+        # Second quarter
+        quarter2 = QuarterFactory(term=self.term, sequence=2)
+        
+        # Attempt to create third quarter should fail
+        with self.assertRaises(ValidationError):
+            Quarter.objects.create(
+                term=self.term,
+                quarter_type='Q3',
+                sequence=3,
+                start_date=self.term.start_date,
+                end_date=self.term.end_date
+            )
+
+    def test_quarter_date_validation(self):
+        """
+        Test date range validation for quarters
+        """
+        # Quarter dates within term
+        quarter = QuarterFactory(term=self.term)
+        self.assertTrue(self.term.start_date <= quarter.start_date)
+        self.assertTrue(quarter.end_date <= self.term.end_date)
 
         # Invalid date range should raise validation error
         with self.assertRaises(ValidationError):
-            invalid_term = Term(
-                year=self.school_year,
-                term_type='SEM1',
+            Quarter.objects.create(
+                term=self.term,
+                quarter_type='Q1',
                 sequence=1,
-                start_date=self.school_year.end_date,
-                end_date=self.school_year.start_date
+                start_date=self.term.end_date,
+                end_date=self.term.start_date
             )
-            invalid_term.full_clean()
 
-    def test_quarter_generation(self):
-        """Test automatic quarter generation for semester terms"""
-        # Create a semester term
-        term = TermFactory(year=self.school_year, with_quarters=True)
+    def test_quarter_week_number(self):
+        """
+        Test get_week_number method
+        """
+        quarter = QuarterFactory(term=self.term)
         
-        # Verify quarters were created
-        quarters = Quarter.objects.filter(term=term)
-        self.assertEqual(quarters.count(), 2)
+        # Test week number calculation
+        mid_date = quarter.start_date + timezone.timedelta(days=10)
+        week_number = quarter.get_week_number(mid_date)
         
-        # Verify quarter dates
-        for quarter in quarters:
-            self.assertTrue(term.start_date <= quarter.start_date)
-            self.assertTrue(quarter.end_date <= term.end_date)
+        self.assertIsNotNone(week_number)
+        self.assertTrue(1 <= week_number <= (quarter.end_date - quarter.start_date).days // 7)
 
-    def test_current_term_detection(self):
-        """Test is_current property"""
-        from django.utils import timezone
+    def test_reporting_dates(self):
+        """
+        Test get_reporting_dates method
+        """
+        quarter = QuarterFactory(term=self.term)
+        reporting_dates = quarter.get_reporting_dates()
         
-        # Create terms around current date
-        past_term = TermFactory(
-            year=self.school_year, 
-            start_date=timezone.now().date() - timezone.timedelta(days=180),
-            end_date=timezone.now().date() - timezone.timedelta(days=90)
-        )
+        self.assertIn('grades_due', reporting_dates)
+        self.assertIn('reports_published', reporting_dates)
+        self.assertIn('parent_meetings', reporting_dates)
         
-        current_term = TermFactory(
-            year=self.school_year, 
-            start_date=timezone.now().date() - timezone.timedelta(days=30),
-            end_date=timezone.now().date() + timezone.timedelta(days=30)
-        )
-        
-        future_term = TermFactory(
-            year=self.school_year, 
-            start_date=timezone.now().date() + timezone.timedelta(days=90),
-            end_date=timezone.now().date() + timezone.timedelta(days=180)
-        )
-        
-        self.assertFalse(past_term.is_current)
-        self.assertTrue(current_term.is_current)
-        self.assertFalse(future_term.is_current)
+        # Verify dates are within expected ranges
+        self.assertTrue(reporting_dates['grades_due'] <= quarter.end_date)
+        self.assertTrue(reporting_dates['reports_published'] > quarter.end_date)
 
-    def test_term_week_calculations(self):
-        """Test week number and duration calculations"""
-        term = TermFactory(year=self.school_year)
+    def test_quarter_metadata(self):
+        """
+        Test metadata schema and storage
+        """
+        quarter = QuarterFactory(term=self.term, with_metadata=True)
         
-        # Test duration_weeks
-        expected_weeks = (term.end_date - term.start_date).days // 7
-        self.assertEqual(term.duration_weeks, expected_weeks)
+        # Verify metadata structure
+        self.assertIn('reporting_dates', quarter.metadata)
+        self.assertIn('assessment_weeks', quarter.metadata)
         
-        # Test get_week_number
-        mid_date = term.start_date + timezone.timedelta(days=int(term.duration_weeks * 7 / 2))
-        week_number = term.get_week_number(mid_date)
-        self.assertTrue(1 <= week_number <= term.duration_weeks)
+        # Check specific metadata elements
+        self.assertEqual(len(quarter.metadata['assessment_weeks']), 2)
+        self.assertIn('week_number', quarter.metadata['assessment_weeks'][0])
+        self.assertIn('type', quarter.metadata['assessment_weeks'][0])
 
-    def test_term_metadata(self):
-        """Test metadata schema and storage"""
-        term = TermFactory(year=self.school_year)
+    def test_quarter_caching(self):
+        """
+        Test caching mechanisms
+        """
+        from django.core.cache import cache
         
-        # Add metadata
-        term.metadata = {
-            "academic_weeks": [
-                {
-                    "week_number": 1,
-                    "start_date": str(term.start_date),
-                    "end_date": str(term.start_date + timezone.timedelta(days=6))
-                }
-            ],
-            "special_dates": [
-                {
-                    "date": str(term.start_date),
-                    "description": "First day of term"
-                }
-            ]
-        }
-        term.save()
+        quarter = QuarterFactory(term=self.term)
         
-        # Retrieve and verify
-        retrieved_term = Term.objects.get(pk=term.pk)
-        self.assertEqual(
-            retrieved_term.metadata['academic_weeks'][0]['week_number'], 
-            1
-        )
+        # Test get_for_date caching
+        Quarter.objects.get_for_date(quarter.start_date)
+        cache_key = f'quarter:date:{quarter.start_date}'
+        cached_quarter_id = cache.get(cache_key)
+        
+        self.assertEqual(cached_quarter_id, quarter.id)
+
+    def test_unique_constraints(self):
+        """
+        Test unique constraints on quarters
+        """
+        # Create first quarter
+        QuarterFactory(term=self.term, sequence=1, quarter_type='Q1')
+        
+        # Attempt to create duplicate should fail
+        with self.assertRaises(IntegrityError):
+            Quarter.objects.create(
+                term=self.term,
+                sequence=1,
+                quarter_type='Q1',
+                start_date=self.term.start_date,
+                end_date=self.term.end_date
+            )

@@ -1,35 +1,5 @@
 # Implementation Steps
 
-### 1. Project Setup
-```bash
-# Initial structure
-django-admin startproject config .
-mkdir -p {core,calendar}/models
-mkdir -p config/settings
-mkdir -p requirements
-mkdir -p {static,templates}
-
-# Create requirements files
-requirements/
-├── base.txt      # From requirements spec
-├── dev.txt      # base.txt + dev tools
-└── prod.txt     # base.txt + prod deps
-```
-
-### 2. Configuration (Use config specs)
-```
-1. config/settings/
-   - Create base.py
-   - Create dev.py
-   - Create prod.py
-   - Create utils.py (secret key management)
-
-2. Environment:
-   - Copy .gitignore
-   - Create .env.example
-   - Create .env.dev (dev secret key)
-```
-
 ### 3. Core App Setup
 ```bash
 # Install core functionality
@@ -50,10 +20,10 @@ python manage.py startapp core
 
 ### 4. Calendar App Implementation
 ```bash
-python manage.py startapp calendar
+python manage.py startapp schoolcalendar
 
 # Follow model specs in order:
-1. calendar/models/
+1. schoolcalendar/models/
    - school_year.py
    - term.py
    - quarter.py
