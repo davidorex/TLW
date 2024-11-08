@@ -75,11 +75,11 @@ class Term(MetadataModel):
     """
 
     TERM_TYPES = [
-        ('SEM1', _('First Semester')),
-        ('SEM2', _('Second Semester')),
-        ('TRI1', _('First Trimester')),
-        ('TRI2', _('Second Trimester')),
-        ('TRI3', _('Third Trimester'))
+        ('SEM1', _('Semester 1)),
+        ('SEM2', _('Semester 2')),
+        ('TRI1', _('Trimester 1')),
+        ('TRI2', _('Trimester 2')),
+        ('TRI3', _('Trimester 3'))
     ]
 
     METADATA_SCHEMA = {
@@ -127,6 +127,7 @@ class Term(MetadataModel):
 
     sequence = models.IntegerField(
         validators=[MinValueValidator(1)],
+        default=1,  # Added default value
         help_text="Order within year (1-based)"
     )
 
@@ -197,8 +198,38 @@ class Term(MetadataModel):
                 return week['week_number']
         return None
 
-    # Rest of the model remains the same as in previous implementation
-    # ... (previous __str__, Meta, properties remain unchanged)
+    def __str__(self):
+        return f"{self.get_term_type_display()} - {self.year}"
+
+    @property
+    def is_current(self):
+        """True if today falls within term"""
+        today = timezone.now().date()
+        return self.start_date <= today <= self.end_date
+
+    @property
+    def duration_weeks(self):
+        """Number of teaching weeks"""
+        return (self.end_date - self.start_date).days // 7
+
+    class Meta:
+        verbose_name = _("Term")
+        verbose_name_plural = _("Terms")
+        ordering = ['year', 'sequence']
+        unique_together = [
+            ['year', 'sequence'],
+            ['year', 'term_type']
+        ]
+        indexes = [
+            models.Index(fields=['start_date', 'end_date']),
+            models.Index(fields=['year', 'sequence'])
+        ]
+        constraints = [
+            models.CheckConstraint(
+                check=Q(end_date__gt=F('start_date')),
+                name='valid_term_dates'
+            )
+        ]
 
 # Cache invalidation signals
 @receiver([post_save, post_delete], sender=Term)

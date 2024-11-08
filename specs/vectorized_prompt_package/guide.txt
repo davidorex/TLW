@@ -1,0 +1,22 @@
+
+# Guide: Turning Natural Language Specs into Vectorized Prompts
+
+## Overview
+This guide will take you through the steps to convert a natural language specification into a structured, token-efficient, vectorized prompt for guiding code generation.
+
+### Step 1: Segment the Specification
+Break the specification into sections like "Overview", "Requirements", "Methods", etc. Organizing the spec file makes it easier to extract meaningful embeddings for each part.
+
+### Step 2: Summarize Key Sections
+For each section, write a concise summary that captures the core requirements or functionalities described. Summaries help condense information to reduce token usage.
+
+### Step 3: Generate Embeddings
+Using a code-aware embedding model, convert each summarized section into a vector representation. These embeddings help capture semantic meaning and structure for later prompt creation.
+
+### Step 4: Organize the Vectorized Data
+Store the vectorized summaries and embeddings in a structured JSON format. This organized data will allow you to reference specific parts in prompts as needed.
+
+### Step 5: Construct Concise Prompts
+With the summarized sections and embeddings ready, create efficient prompts that include only necessary summaries or embeddings for the task at hand.
+
+This process will help you generate accurate, context-aware prompts with minimal token usage.
