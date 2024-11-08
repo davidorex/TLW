@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}School Calendar{% endblock %}</title>
+    
+    {% block extra_head %}
+    <!-- Placeholder for additional head content -->
+    {% endblock %}
+</head>
+<body>
+    <header>
+        {% block header %}
+        <nav>
+            <h1>School Calendar System</h1>
+        </nav>
+        {% endblock %}
+    </header>
+
+    <main>
+        {% block content %}
+        <!-- Main content will be inserted by child templates -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        {% block footer %}
+        <p>&copy; {% now "Y" %} School Calendar Application</p>
+        {% endblock %}
+    </footer>
+
+    {% block extra_scripts %}
+    <!-- Placeholder for additional scripts -->
+    {% endblock %}
+</body>
+</html>

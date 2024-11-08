@@ -129,6 +129,25 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# SchoolCalendar App Settings
+SCHOOLCALENDAR_SETTINGS = {
+    'content_types': [
+        'course.Unit',
+        'course.Lesson',
+        'assessment.Task',
+        'study.Resource'
+    ],
+    'role_views': [
+        'student',
+        'teacher',
+        'admin'
+    ],
+    'display_modes': [
+        'schedule',
+        'standalone'
+    ]
+}
+
 # Logging configuration
 LOGGING = {
     'version': 1,
