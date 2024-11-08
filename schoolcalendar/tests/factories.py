@@ -97,9 +97,34 @@ class PeriodTemplateFactory(factory.django.DjangoModelFactory):
         model = PeriodTemplate
 
     name = factory.Sequence(lambda n: f'Period Template {n}')
-    quarter = factory.SubFactory(QuarterFactory)
-    duration = factory.LazyFunction(lambda: timezone.timedelta(days=30))
-    description = factory.Faker('text')
+    
+    schedule_type = factory.Iterator(['STD', 'EXT', 'RED', 'MOD'])
+    
+    effective_from = factory.LazyFunction(timezone.now().date)
+    
+    morning_periods = factory.Sequence(lambda n: (n % 6) + 1)
+    
+    afternoon_periods = factory.Sequence(lambda n: (n % 6) + 1)
+    
+    evening_periods = factory.Sequence(lambda n: (n % 4))
+    
+    period_length = factory.Sequence(lambda n: 45 + (n % 3) * 15)
+    
+    passing_time = factory.Sequence(lambda n: 5 + (n % 6))
+    
+    first_period = factory.LazyFunction(lambda: timezone.now().time().replace(hour=8, minute=0))
+    
+    version = factory.Sequence(lambda n: n + 1)
+
+    @factory.post_generation
+    def with_periods(obj, create, extracted, **kwargs):
+        """
+        Generates periods for the template.
+        Usage: PeriodTemplateFactory(with_periods=True)
+        """
+        if create and extracted:
+            periods = obj.generate_periods()
+            # You could do additional processing with periods here if needed
 
 class PeriodContentFactory(factory.django.DjangoModelFactory):
     class Meta:

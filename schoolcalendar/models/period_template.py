@@ -77,21 +77,24 @@ class PeriodTemplate(MetadataModel):
     )
 
     effective_from = models.DateField(
-        db_index=True
+        db_index=True,
+        default=timezone.now  # Added default value using current date
     )
 
     morning_periods = models.PositiveSmallIntegerField(
         validators=[
             MinValueValidator(0),
             MaxValueValidator(6)
-        ]
+        ],
+        default=3
     )
 
     afternoon_periods = models.PositiveSmallIntegerField(
         validators=[
             MinValueValidator(0),
             MaxValueValidator(6)
-        ]
+        ],
+        default=2
     )
 
     evening_periods = models.PositiveSmallIntegerField(
@@ -106,7 +109,8 @@ class PeriodTemplate(MetadataModel):
         validators=[
             MinValueValidator(30),
             MaxValueValidator(120)
-        ]
+        ],
+        default=45
     )
 
     passing_time = models.PositiveIntegerField(
@@ -117,7 +121,9 @@ class PeriodTemplate(MetadataModel):
         default=5
     )
 
-    first_period = models.TimeField()
+    first_period = models.TimeField(
+        default=timezone.now
+    )
 
     version = models.PositiveIntegerField(
         default=1,
