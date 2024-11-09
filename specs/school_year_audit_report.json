@@ -1,0 +1,47 @@
+{
+    "model": "SchoolYear",
+    "fields": {
+        "implementation": [
+            {"name": "name", "type": "CharField", "max_length": 100},
+            {"name": "start_date", "type": "DateField"},
+            {"name": "end_date", "type": "DateField"},
+            {"name": "term_type", "type": "CharField", "max_length": 10, "choices": ["SEMESTER", "TRIMESTER"]}
+        ],
+        "specification": [
+            {"name": "academic_year", "type": "CharField", "max_length": 9, "unique": true, "db_index": true},
+            {"name": "start_date", "type": "DateField", "db_index": true},
+            {"name": "end_date", "type": "DateField", "db_index": true},
+            {"name": "term_structure", "type": "CharField", "max_length": 10, "choices": ["SEMESTER", "TRIMESTER"], "db_index": true}
+        ],
+        "discrepancies": [
+            {"field": "name", "issue": "Field 'name' in implementation does not match 'academic_year' in specification."},
+            {"field": "term_type", "issue": "Field 'term_type' in implementation does not match 'term_structure' in specification."}
+        ]
+    },
+    "methods": {
+        "implementation": ["__str__"],
+        "specification": ["clean", "generate_terms", "get_current_term", "get_week_number", "is_school_day"],
+        "discrepancies": [
+            {"method": "__str__", "issue": "Method '__str__' is present in implementation but not specified."},
+            {"method": "clean", "issue": "Method 'clean' is specified but not implemented."},
+            {"method": "generate_terms", "issue": "Method 'generate_terms' is specified but not implemented."},
+            {"method": "get_current_term", "issue": "Method 'get_current_term' is specified but not implemented."},
+            {"method": "get_week_number", "issue": "Method 'get_week_number' is specified but not implemented."},
+            {"method": "is_school_day", "issue": "Method 'is_school_day' is specified but not implemented."}
+        ]
+    },
+    "metadata_schema": {
+        "implementation": "Not present",
+        "specification": "Defined with holiday_dates, term_breaks, config",
+        "discrepancies": [
+            {"issue": "Metadata schema is specified but not implemented."}
+        ]
+    },
+    "signals": {
+        "implementation": "Not present",
+        "specification": ["ensure_terms_exist", "validate_metadata"],
+        "discrepancies": [
+            {"issue": "Signals 'ensure_terms_exist' and 'validate_metadata' are specified but not implemented."}
+        ]
+    }
+}

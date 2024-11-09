@@ -1,0 +1,130 @@
+{
+  "manage.py": {
+    "functions": ["main"]
+  },
+  "schoolcalendar/signals.py": {
+    "functions": ["schoolyear_post_save", "term_pre_delete"]
+  },
+  "schoolcalendar/utils.py": {
+    "functions": ["get_default_template"]
+  },
+  "schoolcalendar/views.py": {
+    "classes": ["CalendarView"],
+    "functions": ["get_context_data"]
+  },
+  "schoolcalendar/admin.py": {
+    "classes": ["TermAdmin", "QuarterAdmin"],
+    "functions": ["get_readonly_fields"]
+  },
+  "specs/vectorized_prompt_package/process_spec_file.py": {
+    "functions": ["process_spec_file"]
+  },
+  "schoolcalendar/management/commands/ensure_default_template.py": {
+    "classes": ["Command"],
+    "functions": ["handle"]
+  },
+  "schoolcalendar/models/school_year.py": {
+    "classes": ["SchoolYear"],
+    "functions": ["__str__"]
+  },
+  "schoolcalendar/models/period_template.py": {
+    "classes": ["PeriodTemplateManager", "PeriodTemplate"],
+    "functions": ["get_default", "__str__"]
+  },
+  "schoolcalendar/apps.py": {
+    "classes": ["SchoolCalendarConfig"],
+    "functions": ["ready", "setup_cache_config"]
+  },
+  "schoolcalendar/models/period_content.py": {
+    "functions": ["get_default_template", "clean", "is_visible_to", "resolve_conflicts", "get_display_data", "validate_scheduling", "notify_users"],
+    "classes": ["PeriodContent"]
+  },
+  "schoolcalendar/tests/test_models.py": {
+    "classes": ["SchoolCalendarModelTests", "PeriodTemplateModelTests", "PeriodContentModelTests"],
+    "functions": ["setUp", "test_school_year_creation", "test_term_creation", "test_quarter_creation", "test_period_template_creation", "test_period_generation", "test_period_times", "test_create_new_version", "test_validation_period_counts", "test_validation_period_length", "test_active_template_caching", "test_version_constraint", "test_default_template", "test_get_default_template", "test_period_content_creation_with_default_template", "test_period_content_creation_without_default_template", "test_period_content_explicit_template"]
+  },
+  "schoolcalendar/migrations/0005_alter_periodcontent_options_and_more.py": {
+    "classes": ["Migration"]
+  },
+  "schoolcalendar/migrations/0002_historicalperiodtemplate_and_more.py": {
+    "classes": ["Migration"]
+  },
+  "schoolcalendar/migrations/0009_alter_periodcontent_template.py": {
+    "classes": ["Migration"]
+  },
+  "schoolcalendar/migrations/0004_rename_term_structure_schoolyear_term_type.py": {
+    "classes": ["Migration"]
+  },
+  "schoolcalendar/tests/factories.py": {
+    "classes": ["SchoolYearFactory", "TermFactory", "QuarterFactory", "PeriodTemplateFactory", "PeriodContentFactory"],
+    "functions": ["with_quarters", "with_metadata", "with_periods"]
+  },
+  "schoolcalendar/migrations/0007_remove_historicalperiodtemplate_created_by_and_more.py": {
+    "classes": ["Migration"]
+  },
+  "schoolcalendar/migrations/0001_initial.py": {
+    "classes": ["Migration"]
+  },
+  "schoolcalendar/models/term.py": {
+    "functions": ["get_or_create_default_school_year", "clean", "get_weeks", "get_week_number", "__str__", "invalidate_term_caches"],
+    "classes": ["TermManager", "Term"]
+  },
+  "schoolcalendar/migrations/0008_add_is_default_to_periodtemplate.py": {
+    "classes": ["Migration"]
+  },
+  "schoolcalendar/models/quarter.py": {
+    "functions": ["validate_semester_term", "clean", "get_week_number", "get_reporting_dates", "__str__", "validate_quarter_pre_save", "invalidate_quarter_caches"],
+    "classes": ["QuarterManager", "Quarter"]
+  },
+  "schoolcalendar/templatetags/schoolcalendar_tags.py": {
+    "functions": ["render_calendar_component", "format_calendar_date"]
+  },
+  "schoolcalendar/migrations/0006_alter_periodcontent_template.py": {
+    "classes": ["Migration"]
+  },
+  "core/views/mixins.py": {
+    "classes": ["PermissionRequiredMixin", "AuditableMixin"],
+    "functions": ["has_permission", "save_model"]
+  },
+  "core/apps.py": {
+    "classes": ["CoreConfig"],
+    "functions": ["ready", "register_app_settings"]
+  },
+  "schoolcalendar/migrations/0003_schoolyear_term_structure.py": {
+    "classes": ["Migration"]
+  },
+  "core/models/abstracts.py": {
+    "classes": ["BaseManager", "ActiveManager", "BaseModel", "AuditableModel", "HistoricalModel", "MetadataModel"],
+    "functions": ["get_queryset", "is_deleted", "active_status", "soft_delete", "restore", "save", "get_creator_name", "get_modifier_name", "get_history_type_display", "revert_to", "get_version_at", "diff_with", "previous_version", "next_version", "has_changes", "get_metadata", "set_metadata", "update_metadata", "validate_metadata", "valid_metadata"]
+  },
+  "core/utils/context.py": {
+    "functions": ["get_current_user", "set_current_user", "with_user"],
+    "classes": ["UserContextManager"]
+  },
+  "core/tests/test_models.py": {
+    "classes": ["TestBaseModel", "BaseModelTests", "TestAuditableModel", "AuditableModelTests", "TestHistoricalModel", "HistoricalModelTests", "TestMetadataModel", "MetadataModelTests"],
+    "functions": ["setUp", "test_uuid_generation", "test_timestamp_fields", "test_soft_delete", "test_restore", "test_active_manager", "test_user_tracking", "test_user_name_methods", "test_history_tracking", "test_revert_to", "test_version_comparison", "test_metadata_validation", "test_metadata_properties", "test_metadata_methods"]
+  },
+  "core/tests/conftest.py": {
+    "functions": ["test_user", "test_superuser", "test_metadata_schema", "test_metadata", "invalid_metadata"]
+  },
+  "core/registry.py": {
+    "classes": ["ContentRegistry"],
+    "functions": ["register", "get_content_types", "get_registered_models"]
+  },
+  "core/utils/history.py": {
+    "classes": ["SafeDeleteHistoricalModel", "ExtendedHistoricalRecords"],
+    "functions": ["get_history_model_name", "get_history_table_name", "post_save", "diff_historical_records", "get_version_at"]
+  },
+  "core/tests/test_utils.py": {
+    "classes": ["ContextUtilsTests", "MetadataUtilsTests", "HistoryUtilsTests"],
+    "functions": ["setUp", "test_get_set_current_user", "test_user_context_manager", "test_with_user_decorator", "test_valid_metadata", "test_invalid_metadata_type", "test_missing_required_field", "test_validate_metadata_schema", "test_get_history_model_name", "test_get_history_table_name", "test_diff_historical_records", "test_safe_delete_historical_model"]
+  },
+  "core/utils/metadata.py": {
+    "classes": ["MetadataValidator"],
+    "functions": ["_build_annotations", "_get_python_type", "validate", "validate_metadata_schema"]
+  },
+  "core/signals.py": {
+    "functions": ["handle_content_changes"]
+  }
+}

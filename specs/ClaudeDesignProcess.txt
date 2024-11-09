@@ -1,0 +1,35 @@
+# Claude Design Process Instructions By fixguzman
+
+## 1. Project Initialization
+
+- Begin by creating a dedicated project folder for the development process. This folder will house all development files in `.md` format.
+- Use a tool like Obsidian to keep track of notes, instructions, and modular components of the project.
+
+## 2. Design Modular Project Structure
+
+- Define the structure of your project by identifying core modules and their relationships. This will serve as the foundation for all development work.
+- Follow a clean architecture approach, focusing on a modular design that separates features and reduces dependencies.
+
+## 3. Task-Based System Prompts
+
+- For each new task, set a unique system prompt. Avoid using the same prompt across different tasks, as each should be specific to the requirements of the task at hand.
+- Adjust the system prompt based on the context of the feature being developed to maximize the relevance and efficiency of the AI’s responses.
+
+## 4. Feature-by-Feature Documentation
+
+- Document each feature individually, noting specific instructions for development and any requirements or dependencies.
+- Maintain a modular documentation approach so that each feature can be referenced independently and worked on without affecting other modules.
+
+## 5. Context Management and Avoiding Duplicates
+
+- To reduce the risk of hallucinations or file duplication, reference existing documents or modules as necessary.
+- Keep related documents linked or cross-referenced within the project folder to ensure continuity and maintain clear context across tasks.
+
+## 6. Iterative Development
+
+- Approach development iteratively, working on one module or feature at a time.
+- Use the project structure as a basis for this incremental process, ensuring each module is complete and well-documented before moving on to the next.
+
+---
+
+By following these instructions, you’ll ensure an organized, contextually aware development workflow with minimal duplication and improved efficiency.

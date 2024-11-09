@@ -1,16 +1,19 @@
-from pathlib import Path
 import os
-from dotenv import load_dotenv
+from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# Load environment variables from .env.dev file
-load_dotenv(BASE_DIR / '.env.dev')
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-print(f"Loading settings with SECRET_KEY: {os.getenv('DJANGO_SECRET_KEY')}")
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'django-insecure-replace-this-with-your-secret-key'
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -20,25 +23,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     # Third-party apps
-    'import_export',
-    'rest_framework',
-    'simple_history',
-    'django_filters',
-    'crispy_forms',
-    'allauth',
-
-    # Local apps
+    
+    # Core apps
     'core.apps.CoreConfig',
+    
+    # School calendar app
     'schoolcalendar.apps.SchoolCalendarConfig',
 ]
-
-# Ensure django.contrib.staticfiles and django.contrib.admin are in INSTALLED_APPS
-if 'django.contrib.staticfiles' not in INSTALLED_APPS:
-    INSTALLED_APPS.append('django.contrib.staticfiles')
-if 'django.contrib.admin' not in INSTALLED_APPS:
-    INSTALLED_APPS.append('django.contrib.admin')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,7 +40,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware',  # Add LocaleMiddleware for translations
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -56,7 +47,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -64,7 +55,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.i18n',  # Add i18n context processor
             ],
         },
     },
@@ -73,7 +63,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
-# We'll configure this in environment-specific settings
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -82,6 +72,7 @@ DATABASES = {
 }
 
 # Password validation
+# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -98,114 +89,30 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Internationalization
+# https://docs.djangoproject.com/en/5.0/topics/i18n/
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'Asia/Shanghai'  # Changed to Asia/Shanghai
+TIME_ZONE = 'Asia/Shanghai'
 USE_I18N = True
 USE_TZ = True
 
-# Supported Languages
-LANGUAGES = [
-    ('en', 'English'),
-    ('zh-hans', 'Simplified Chinese'),
-]
-
-# Locale paths
-LOCALE_PATHS = [
-    BASE_DIR / 'locale',
-    BASE_DIR / 'academic_calendar' / 'locale',
-]
-
 # Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.0/howto/static-files/
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
-
-# Media files
-MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# SchoolCalendar App Settings
-SCHOOLCALENDAR_SETTINGS = {
-    'content_types': [
-        'course.Unit',
-        'course.Lesson',
-        'assessment.Task',
-        'study.Resource'
-    ],
-    'role_views': [
-        'student',
-        'teacher',
-        'admin'
-    ],
-    'display_modes': [
-        'schedule',
-        'standalone'
-    ]
+# Caching configuration
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
 }
 
-# Logging configuration
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'file': {
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'django.log',
-            'formatter': 'verbose',
-        },
-    },
-    'root': {
-        'handlers': ['console', 'file'],
-        'level': 'INFO',
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'file'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-            'propagate': False,
-        },
-        'academic_calendar.views.calendar_views': {
-            'handlers': ['console', 'file'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    },
-}
-
-# Security settings that are good for both dev and prod
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# PASSWORD_HASHERS = [
-#     'django.contrib.auth.hashers.Argon2PasswordHasher',
-#     'django.contrib.auth.hashers.PBKDF2PasswordHasher',
-#     'django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher',
-#     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
-# ]
-
-# Import/Export settings
-IMPORT_EXPORT_USE_TRANSACTIONS = True
-
-# Session settings
-SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 1 week
-SESSION_SAVE_EVERY_REQUEST = True
-
-# Message settings
-MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+# Test runner configuration
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+TEST_DISCOVER_TOP_LEVEL = BASE_DIR
+TEST_DISCOVER_ROOT = BASE_DIR
+TEST_DISCOVER_PATTERN = 'test_*.py'

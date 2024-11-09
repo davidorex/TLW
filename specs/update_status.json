@@ -1,0 +1,24 @@
+{
+  "status": "completed",
+  "changes": {
+    "school_year": {
+      "field_renamed": "term_structure to term_type",
+      "locations_updated": ["model", "factory", "tests"]
+    },
+    "period_template": {
+      "metadata_schema_added": true,
+      "schema_details": {
+        "break_schedule": {
+          "morning_break": {"start_period": "integer", "duration": "integer"},
+          "lunch": {"start_period": "integer", "duration": "integer"}
+        },
+        "period_exceptions": {
+          "period_number": "integer",
+          "length": "integer",
+          "reason": "string"
+        }
+      }
+    }
+  },
+  "tests_updated": true
+}

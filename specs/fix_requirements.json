@@ -1,0 +1,18 @@
+{"fix_requirements":{
+   "school_year":{"field":"term_structure","rename_to":"term_type","locations":["model","factory","tests"]},
+   "period_template":{"add":"METADATA_SCHEMA","value":{
+       "type":"object",
+       "properties":{
+           "break_schedule":{"type":"object","properties":{
+               "morning_break":{"start_period":"integer","duration":"integer"},
+               "lunch":{"start_period":"integer","duration":"integer"}
+           }},
+           "period_exceptions":{"type":"array","items":{"type":"object","properties":{
+               "period_number":"integer",
+               "length":"integer",
+               "reason":"string"
+           }}}
+       }
+   }},
+   "implementation_order":["school_year_fix","add_schema","update_tests"]
+}}

@@ -1,0 +1,112 @@
+```json
+{
+    "audit_type": "implementation_verification",
+    "app": "schoolcalendar",
+    "spec_validation": {
+        "files_to_compare": {
+            "models": {
+                "school_year": {
+                    "spec": "specs/school-year-spec-v2.json",
+                    "implementation": "schoolcalendar/models/school_year.py",
+                    "check": [
+                        {"type": "fields", "match": "exact"},
+                        {"type": "methods", "match": "signature"},
+                        {"type": "metadata_schema", "match": "structure"},
+                        {"type": "signals", "match": "presence"}
+                    ]
+                },
+                "term": {
+                    "spec": "specs/term-spec-v1.json",
+                    "implementation": "schoolcalendar/models/term.py",
+                    "check": ["fields", "methods", "signals", "validators"]
+                }
+                // [Additional models follow same pattern]
+            },
+            "admin": {
+                "path": "schoolcalendar/admin/",
+                "verify": ["registration", "customization", "display_fields"]
+            }
+        },
+        "code_quality": {
+            "i18n": {
+                "check": ["gettext_usage", "lazy_evaluation"],
+                "patterns": ["_('", "gettext", "gettext_lazy"]
+            },
+            "documentation": {
+                "docstrings": {
+                    "required": ["class", "method", "module"],
+                    "format": "google_style"
+                },
+                "comments": {
+                    "check": ["clarity", "necessity", "completeness"]
+                }
+            },
+            "type_hints": {
+                "verify": ["method_signatures", "return_types"],
+                "ignore": ["auto_created_fields"]
+            }
+        },
+        "implementation_checks": {
+            "database": {
+                "fields": {
+                    "types": "match_spec",
+                    "constraints": "present",
+                    "indexes": "optimized"
+                },
+                "relationships": {
+                    "foreign_keys": "properly_defined",
+                    "related_names": "meaningful"
+                }
+            },
+            "methods": {
+                "presence": "all_specified",
+                "signatures": "match_spec",
+                "returns": "type_checked"
+            }
+        },
+        "deviations": {
+            "track": {
+                "added_fields": "log",
+                "modified_methods": "detail_changes",
+                "extra_functionality": "document"
+            },
+            "report": {
+                "format": "diff_style",
+                "include_rationale": true
+            }
+        }
+    },
+    "output_format": {
+        "summary": {
+            "completion_status": "percentage",
+            "critical_issues": "highlighted",
+            "deviations": "listed"
+        },
+        "detailed_report": {
+            "by_model": true,
+            "by_feature": true,
+            "include_snippets": true
+        },
+        "recommendations": {
+            "prioritized": true,
+            "with_examples": true
+        }
+    },
+    "cline_directives": {
+        "watch_paths": ["schoolcalendar/"],
+        "ignore_patterns": ["*.pyc", "__pycache__", "migrations"],
+        "state_file": ".cline/schoolcalendar_audit_state.json",
+        "periodic_check": true,
+        "alert_on": ["spec_deviation", "missing_implementation", "quality_issue"]
+    }
+}
+```
+
+This provides Cline with:
+1. Exact paths to compare
+2. Specific elements to verify
+3. Quality metrics to check
+4. Format for reporting
+5. Continuous monitoring directives
+
+Want me to create the complementary reporting template that formats the findings?

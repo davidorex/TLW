@@ -1,0 +1,38 @@
+{
+    "model": "SchoolYear",
+    "discrepancy_severity": {
+        "fields": [
+            {
+                "discrepancy": "Field 'name' vs 'academic_year'",
+                "severity": "Moderate",
+                "evaluation": "The use of 'name' instead of 'academic_year' reduces clarity and may lead to data entry errors. However, it does not critically impact functionality."
+            },
+            {
+                "discrepancy": "Field 'term_type' vs 'term_structure'",
+                "severity": "Moderate",
+                "evaluation": "The term 'term_structure' provides better context for the field's purpose. The current naming may cause confusion but does not critically affect functionality."
+            }
+        ],
+        "methods": [
+            {
+                "discrepancy": "Missing methods 'clean', 'generate_terms', 'get_current_term', 'get_week_number', 'is_school_day'",
+                "severity": "Critical",
+                "evaluation": "These methods are essential for data validation, term generation, and date processing. Their absence significantly impacts the model's functionality and the app's operation."
+            }
+        ],
+        "metadata_schema": [
+            {
+                "discrepancy": "Missing metadata schema",
+                "severity": "High",
+                "evaluation": "The absence of a metadata schema limits the model's ability to store structured data, affecting flexibility and data organization."
+            }
+        ],
+        "signals": [
+            {
+                "discrepancy": "Missing signals 'ensure_terms_exist', 'validate_metadata'",
+                "severity": "High",
+                "evaluation": "Signals automate critical actions like term generation and metadata validation. Their absence requires manual intervention, impacting data integrity and consistency."
+            }
+        ]
+    }
+}

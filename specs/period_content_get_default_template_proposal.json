@@ -1,0 +1,19 @@
+{
+    "proposal": {
+        "method": "get_default_template",
+        "description": "Ensure the method returns a valid PeriodTemplate instance or its primary key.",
+        "implementation": [
+            "1. Define the get_default_template method to return the primary key of the default PeriodTemplate instance.",
+            "2. Use the method in the default argument of the ForeignKey field by passing it as a callable."
+        ],
+        "example_code": [
+            "def get_default_template():",
+            "    default_template = PeriodTemplate.objects.get_default()",
+            "    return default_template.pk if default_template else None",
+            "",
+            "class PeriodContent(models.Model):",
+            "    template = models.ForeignKey(PeriodTemplate, on_delete=models.PROTECT, default=get_default_template)"
+        ],
+        "rationale": "By returning the primary key of the default PeriodTemplate instance, the ForeignKey field receives a valid value that can be used as a default. This approach adheres to Django and Python best practices by ensuring that the default value is compatible with the field's expected data type."
+    }
+}

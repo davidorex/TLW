@@ -1,0 +1,35 @@
+{
+    "model": "SchoolYear",
+    "refactor_directives": [
+        {
+            "directive": "Add docstrings",
+            "details": "Ensure all classes and methods have comprehensive docstrings explaining their purpose and functionality.",
+            "priority": "High",
+            "steps": [
+                "Review each class and method in the SchoolYear model.",
+                "Write a clear and concise docstring for each, following the Google style guide.",
+                "Include examples where applicable to demonstrate usage."
+            ]
+        },
+        {
+            "directive": "Implement type hints",
+            "details": "Add type hints to all method signatures to improve code clarity and maintainability.",
+            "priority": "Medium",
+            "steps": [
+                "Identify all methods in the SchoolYear model.",
+                "Determine the expected input and output types for each method.",
+                "Add type hints to the method signatures accordingly."
+            ]
+        },
+        {
+            "directive": "Optimize future queries",
+            "details": "Ensure any future method implementations involving database interactions are optimized for efficiency.",
+            "priority": "Ongoing",
+            "steps": [
+                "Review any new methods added to the SchoolYear model for database interactions.",
+                "Use Django's query optimization techniques, such as select_related and prefetch_related, where applicable.",
+                "Test query performance and refactor as needed to reduce load times."
+            ]
+        }
+    ]
+}

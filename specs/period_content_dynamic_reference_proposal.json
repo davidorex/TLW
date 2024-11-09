@@ -1,0 +1,17 @@
+{
+    "proposed_changes": [
+        {
+            "field": "year_groups",
+            "current": "models.ManyToManyField('YearGroup', blank=True)",
+            "proposed": "models.ManyToManyField('app_label.YearGroup', blank=True)",
+            "rationale": "Use a dynamic model reference to allow Django to resolve the model at runtime, ensuring flexibility and adaptability."
+        },
+        {
+            "field": "homerooms",
+            "current": "models.ManyToManyField('Homeroom', blank=True)",
+            "proposed": "models.ManyToManyField('app_label.Homeroom', blank=True)",
+            "rationale": "Use a dynamic model reference to allow Django to resolve the model at runtime, ensuring flexibility and adaptability."
+        }
+    ],
+    "additional_notes": "Replace 'app_label' with the actual app label where the 'YearGroup' and 'Homeroom' models are defined. This approach maintains a clean and maintainable codebase without the need for placeholder models or conditional imports."
+}

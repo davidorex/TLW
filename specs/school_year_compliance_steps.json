@@ -1,0 +1,53 @@
+{
+    "model": "SchoolYear",
+    "compliance_steps": {
+        "fields": [
+            {
+                "step": "Rename field 'name' to 'academic_year'",
+                "action": "Update the field name to 'academic_year' and apply a format validator to ensure it follows the 'YYYY-YYYY' format."
+            },
+            {
+                "step": "Rename field 'term_type' to 'term_structure'",
+                "action": "Change the field name to 'term_structure' and ensure it uses the specified choices for term organization."
+            }
+        ],
+        "methods": [
+            {
+                "step": "Implement the 'clean' method",
+                "action": "Add a 'clean' method to validate year format, date ranges, metadata schema, and term break logic."
+            },
+            {
+                "step": "Implement the 'generate_terms' method",
+                "action": "Create a 'generate_terms' method to generate terms based on the specified structure and handle term breaks."
+            },
+            {
+                "step": "Implement the 'get_current_term' method",
+                "action": "Add a 'get_current_term' method to return the active term for a given date, using caching for efficiency."
+            },
+            {
+                "step": "Implement the 'get_week_number' method",
+                "action": "Develop a 'get_week_number' method to calculate the week number for a date, considering term breaks and holidays."
+            },
+            {
+                "step": "Implement the 'is_school_day' method",
+                "action": "Add an 'is_school_day' method to check if a date is a valid school day, excluding holidays and breaks."
+            }
+        ],
+        "metadata_schema": [
+            {
+                "step": "Add metadata schema to the model",
+                "action": "Define a metadata schema in the model to store holiday dates, term breaks, and configuration settings."
+            }
+        ],
+        "signals": [
+            {
+                "step": "Add 'ensure_terms_exist' signal",
+                "action": "Implement a post-save signal to create terms if needed after saving a SchoolYear instance."
+            },
+            {
+                "step": "Add 'validate_metadata' signal",
+                "action": "Implement a pre-save signal to perform additional metadata validation before saving a SchoolYear instance."
+            }
+        ]
+    }
+}

@@ -7,6 +7,7 @@ from schoolcalendar.models.school_year import SchoolYear
 from schoolcalendar.models.term import Term
 from schoolcalendar.models.quarter import Quarter
 from schoolcalendar.models.period_template import PeriodTemplate
+from schoolcalendar.models.period_content import PeriodContent, get_default_template
 
 from schoolcalendar.tests.factories import (
     SchoolYearFactory, 
@@ -18,7 +19,7 @@ from schoolcalendar.tests.factories import (
 class SchoolCalendarModelTests(TestCase):
     def setUp(self):
         # Create a sample school year
-        self.school_year = SchoolYearFactory(term_structure='SEMESTER')
+        self.school_year = SchoolYearFactory(term_type='SEMESTER')
 
     def test_school_year_creation(self):
         """Test SchoolYear model creation"""
@@ -165,3 +166,70 @@ class PeriodTemplateModelTests(TestCase):
                 effective_from=timezone.now().date()
             )
             duplicate_version.full_clean()
+
+    def test_default_template(self):
+        """
+        Test default template functionality
+        """
+        # Create a default template
+        default_template = PeriodTemplateFactory(is_default=True)
+        
+        # Verify get_default returns the correct template
+        self.assertEqual(PeriodTemplate.objects.get_default(), default_template)
+        
+        # Create another default template should update the default
+        new_default = PeriodTemplateFactory(is_default=True)
+        self.assertFalse(PeriodTemplate.objects.get(pk=default_template.pk).is_default)
+        self.assertEqual(PeriodTemplate.objects.get_default(), new_default)
+
+class PeriodContentModelTests(TestCase):
+    def setUp(self):
+        self.default_template = PeriodTemplateFactory(is_default=True)
+        self.non_default_template = PeriodTemplateFactory(is_default=False)
+
+    def test_get_default_template(self):
+        """
+        Test get_default_template function behavior
+        """
+        # Should return the default template's pk
+        self.assertEqual(get_default_template(), self.default_template.pk)
+        
+        # After removing default flag, should return None
+        self.default_template.is_default = False
+        self.default_template.save()
+        self.assertIsNone(get_default_template())
+
+    def test_period_content_creation_with_default_template(self):
+        """
+        Test PeriodContent creation using default template
+        """
+        content = PeriodContent.objects.create(
+            date=timezone.now().date(),
+            period_number=1
+        )
+        self.assertEqual(content.template, self.default_template)
+
+    def test_period_content_creation_without_default_template(self):
+        """
+        Test PeriodContent creation when no default template exists
+        """
+        # Remove default flag
+        self.default_template.is_default = False
+        self.default_template.save()
+        
+        content = PeriodContent.objects.create(
+            date=timezone.now().date(),
+            period_number=1
+        )
+        self.assertIsNone(content.template)
+
+    def test_period_content_explicit_template(self):
+        """
+        Test PeriodContent creation with explicitly specified template
+        """
+        content = PeriodContent.objects.create(
+            date=timezone.now().date(),
+            period_number=1,
+            template=self.non_default_template
+        )
+        self.assertEqual(content.template, self.non_default_template)
