@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+    environment:
+      - DEBUG=${DEBUG}
+      - SECRET_KEY=GcZRE2eams_3qEAec_KyMh_lTlFA4U5RJzy8w-S2QRHmsuPqAqbd_vX7y3ani6AdqP8
+      - DATABASE_ENGINE=django.db.backends.postgresql
+      - DATABASE_NAME=twl
+      - DATABASE_USER=socrates
+      - DATABASE_PASSWORD=mimnug-qunkUj-gosse8
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - ALLOWED_HOSTS=tlw.davidorex.ai
+
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: twl
+      POSTGRES_USER: socrates
+      POSTGRES_PASSWORD: mimnug-qunkUj-gosse8
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
