@@ -1,0 +1,91 @@
+{
+  "premises": [
+    "The development environment should closely mimic the production environment.",
+    "Use Docker to containerize the application for consistency."
+  ],
+  "goals": [
+    "Set up a development environment using Docker with Nginx, Gunicorn, and PostgreSQL.",
+    "Ensure the application runs smoothly in both development and production environments."
+  ],
+  "instructions": [
+    {
+      "step": "Set Up Docker Environment",
+      "details": [
+        {
+          "task": "Create Dockerfile",
+          "commands": [
+            "FROM python:3.9-slim",
+            "ENV PYTHONDONTWRITEBYTECODE 1",
+            "ENV PYTHONUNBUFFERED 1",
+            "WORKDIR /code",
+            "COPY requirements.txt /code/",
+            "RUN pip install -r requirements.txt",
+            "COPY . /code/"
+          ]
+        },
+        {
+          "task": "Create docker-compose.yml",
+          "commands": [
+            "version: '3.8'",
+            "services:",
+            "  web:",
+            "    build: .",
+            "    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000",
+            "    volumes:",
+            "      - .:/code",
+            "    ports:",
+            "      - '8000:8000'",
+            "    depends_on:",
+            "      - db",
+            "    environment:",
+            "      - DEBUG=${DEBUG}",
+            "      - SECRET_KEY=GcZRE2eams_3qEAec_KyMh_lTlFA4U5RJzy8w-S2QRHmsuPqAqbd_vX7y3ani6AdqP8",
+            "      - DATABASE_ENGINE=django.db.backends.postgresql",
+            "      - DATABASE_NAME=twl",
+            "      - DATABASE_USER=socrates",
+            "      - DATABASE_PASSWORD=mimnug-qunkUj-gosse8",
+            "      - DATABASE_HOST=db",
+            "      - DATABASE_PORT=5432",
+            "      - ALLOWED_HOSTS=tlw.davidorex.ai",
+            "  db:",
+            "    image: postgres",
+            "    volumes:",
+            "      - postgres_data:/var/lib/postgresql/data/",
+            "    environment:",
+            "      POSTGRES_DB: twl",
+            "      POSTGRES_USER: socrates",
+            "      POSTGRES_PASSWORD: mimnug-qunkUj-gosse8",
+            "  nginx:",
+            "    image: nginx:alpine",
+            "    ports:",
+            "      - '80:80'",
+            "    volumes:",
+            "      - ./nginx:/etc/nginx/conf.d",
+            "    depends_on:",
+            "      - web",
+            "volumes:",
+            "  postgres_data:"
+          ]
+        }
+      ]
+    },
+    {
+      "step": "Run Docker Compose",
+      "commands": [
+        "docker-compose up --build"
+      ]
+    },
+    {
+      "step": "Access the Application",
+      "details": [
+        "Open your browser and navigate to http://localhost to access the application running in Docker."
+      ]
+    }
+  ],
+  "best_practices": [
+    "Use environment variables for configuration management.",
+    "Regularly update dependencies to patch security vulnerabilities.",
+    "Implement logging and monitoring for error tracking and performance metrics.",
+    "Ensure DEBUG is set to False in production to enhance security."
+  ]
+}
