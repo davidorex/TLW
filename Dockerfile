@@ -17,3 +17,6 @@ RUN pip install gunicorn
 
 # Copy the entire project into the container
 COPY . /code/
+
+# Collect static files
+RUN python manage.py collectstatic --noinput
