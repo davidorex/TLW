@@ -1,0 +1,229 @@
+{
+  "version": "1.0.0",
+  "description": "GPT execution instructions for frontend implementation",
+  "execution_context": {
+    "project_type": "Django School Calendar",
+    "base_path": "/Users/david/Projects/teaching_learning_workshop",
+    "framework_version": "Django 5.1.2"
+  },
+  "execution_sequence": [
+    {
+      "phase": "initialization",
+      "instructions": [
+        {
+          "action": "create_directories",
+          "paths": [
+            "static/css",
+            "static/js/components",
+            "schoolcalendar/templates/schoolcalendar/components",
+            "schoolcalendar/templates/schoolcalendar/views"
+          ],
+          "validation": "Verify directory structure exists"
+        },
+        {
+          "action": "update_settings",
+          "file": "config/settings/base.py",
+          "modifications": [
+            "Add static files configuration",
+            "Configure template directories",
+            "Add webpack loader if using bundling"
+          ]
+        }
+      ]
+    },
+    {
+      "phase": "core_styles",
+      "files": [
+        {
+          "path": "static/css/base.css",
+          "content_structure": {
+            "variables": [
+              "colors",
+              "typography",
+              "spacing",
+              "breakpoints"
+            ],
+            "reset": [
+              "modern-normalize",
+              "custom-resets"
+            ],
+            "layouts": [
+              "grid-system",
+              "flex-helpers",
+              "containers"
+            ]
+          },
+          "optimization": {
+            "use_custom_properties": true,
+            "implement_fluid_typography": true,
+            "add_dark_mode_support": true
+          }
+        }
+      ]
+    },
+    {
+      "phase": "component_development",
+      "components": [
+        {
+          "name": "CalendarWidget",
+          "files": {
+            "template": {
+              "path": "schoolcalendar/templates/schoolcalendar/components/calendar_widget.html",
+              "structure": [
+                "container-element",
+                "navigation-controls",
+                "grid-layout",
+                "event-slots"
+              ]
+            },
+            "style": {
+              "path": "static/css/components/calendar.css",
+              "modules": [
+                "grid-layout",
+                "event-styling",
+                "interactions",
+                "responsive-adjustments"
+              ]
+            },
+            "script": {
+              "path": "static/js/components/Calendar.js",
+              "classes": [
+                "CalendarState",
+                "EventHandler",
+                "ViewManager"
+              ],
+              "methods": [
+                "initializeCalendar",
+                "handleEventDrag",
+                "updateView",
+                "refreshData"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "phase": "state_management",
+      "files": [
+        {
+          "path": "static/js/utils/state.js",
+          "implementation": {
+            "pattern": "Observable Store",
+            "features": [
+              "state immutability",
+              "action dispatching",
+              "subscription management"
+            ],
+            "methods": [
+              "dispatch",
+              "subscribe",
+              "getState",
+              "setState"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "phase": "api_integration",
+      "files": [
+        {
+          "path": "static/js/api/calendar.js",
+          "endpoints": {
+            "getEvents": {
+              "method": "GET",
+              "url": "/api/calendar/events/",
+              "parameters": ["start_date", "end_date"],
+              "response_handling": [
+                "data transformation",
+                "error handling",
+                "cache management"
+              ]
+            },
+            "updateEvent": {
+              "method": "PATCH",
+              "url": "/api/calendar/events/:id/",
+              "validation": ["date_range", "conflicts"],
+              "error_handling": ["network", "validation"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "phase": "view_integration",
+      "files": [
+        {
+          "path": "schoolcalendar/templates/schoolcalendar/views/dashboard.html",
+          "sections": [
+            {
+              "name": "header",
+              "components": ["navigation", "user-controls"]
+            },
+            {
+              "name": "main",
+              "components": ["calendar-widget", "term-manager"]
+            },
+            {
+              "name": "sidebar",
+              "components": ["quick-actions", "filters"]
+            }
+          ],
+          "layout": "grid-based-responsive"
+        }
+      ]
+    }
+  ],
+  "validation_requirements": {
+    "code_quality": {
+      "linting": ["eslint", "stylelint"],
+      "formatting": ["prettier"],
+      "testing": ["jest", "cypress"]
+    },
+    "performance_metrics": {
+      "load_time": "< 2s",
+      "first_paint": "< 1s",
+      "interaction_delay": "< 100ms"
+    },
+    "accessibility": {
+      "wcag_level": "AA",
+      "required_features": [
+        "keyboard_navigation",
+        "screen_reader_support",
+        "high_contrast"
+      ]
+    }
+  },
+  "error_handling": {
+    "strategies": {
+      "api_failures": [
+        "retry_with_backoff",
+        "offline_support",
+        "user_notification"
+      ],
+      "state_conflicts": [
+        "optimistic_updates",
+        "conflict_resolution",
+        "data_reconciliation"
+      ]
+    }
+  },
+  "optimization_directives": {
+    "bundling": {
+      "strategy": "webpack",
+      "optimizations": [
+        "code_splitting",
+        "tree_shaking",
+        "lazy_loading"
+      ]
+    },
+    "caching": {
+      "strategies": [
+        "browser_cache",
+        "service_worker",
+        "memory_cache"
+      ]
+    }
+  }
+}
