@@ -1,0 +1,200 @@
+/* Base CSS - Core styling system */
+
+/* CSS Variables for theming */
+:root {
+    /* Colors */
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+    --light-color: #f8f9fa;
+    --dark-color: #343a40;
+    
+    /* Typography */
+    --font-family-base: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    --font-size-base: 16px;
+    --line-height-base: 1.5;
+    
+    /* Spacing */
+    --spacing-unit: 8px;
+    --container-padding: calc(var(--spacing-unit) * 2);
+    --section-spacing: calc(var(--spacing-unit) * 4);
+    
+    /* Layout */
+    --header-height: 60px;
+    --footer-height: 60px;
+    --sidebar-width: 250px;
+    
+    /* Border radius */
+    --border-radius-sm: 4px;
+    --border-radius-md: 6px;
+    --border-radius-lg: 8px;
+    
+    /* Transitions */
+    --transition-speed: 0.3s;
+    --transition-timing: ease-in-out;
+}
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    font-family: var(--font-family-base);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    color: var(--dark-color);
+    background-color: var(--light-color);
+}
+
+/* Typography System */
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: var(--spacing-unit);
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1rem; }
+
+p { margin-bottom: var(--spacing-unit); }
+
+/* Grid System */
+.grid-container {
+    display: grid;
+    grid-template-areas:
+        "header"
+        "main"
+        "footer";
+    grid-template-rows: var(--header-height) 1fr var(--footer-height);
+    min-height: 100vh;
+}
+
+.header { grid-area: header; }
+.main-content { grid-area: main; }
+.footer { grid-area: footer; }
+
+/* Layout Components */
+.header {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 0 var(--container-padding);
+    display: flex;
+    align-items: center;
+}
+
+.main-content {
+    padding: var(--container-padding);
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.footer {
+    background-color: var(--dark-color);
+    color: var(--light-color);
+    padding: 0 var(--container-padding);
+    display: flex;
+    align-items: center;
+}
+
+/* Navigation */
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.nav-list {
+    display: flex;
+    list-style: none;
+    gap: calc(var(--spacing-unit) * 2);
+}
+
+.nav-link {
+    color: var(--dark-color);
+    text-decoration: none;
+    padding: var(--spacing-unit);
+    transition: color var(--transition-speed) var(--transition-timing);
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: calc(var(--spacing-unit) * 0.75) calc(var(--spacing-unit) * 1.5);
+    border-radius: var(--border-radius-md);
+    text-decoration: none;
+    transition: all var(--transition-speed) var(--transition-timing);
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+/* Alerts */
+.alert {
+    padding: var(--spacing-unit);
+    margin-bottom: var(--spacing-unit);
+    border-radius: var(--border-radius-md);
+}
+
+.alert-success { background-color: var(--success-color); color: white; }
+.alert-danger { background-color: var(--danger-color); color: white; }
+.alert-warning { background-color: var(--warning-color); color: black; }
+.alert-info { background-color: var(--info-color); color: white; }
+
+/* Responsive Breakpoints */
+@media (max-width: 768px) {
+    :root {
+        --header-height: 50px;
+        --footer-height: 50px;
+        --container-padding: var(--spacing-unit);
+    }
+
+    .nav-list {
+        display: none;
+    }
+
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.5rem; }
+    h4 { font-size: 1.25rem; }
+    h5 { font-size: 1.15rem; }
+    h6 { font-size: 1rem; }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .main-content {
+        max-width: 900px;
+    }
+}
+
+@media (min-width: 1025px) {
+    .main-content {
+        max-width: 1200px;
+    }
+}

@@ -1,0 +1,112 @@
+{% load static %}
+
+<div class="term-card" data-term-id="{{ term.id }}">
+    <div class="term-header">
+        <div class="term-status {% if term.is_active %}active{% endif %}">
+            <span class="status-indicator"></span>
+            {{ term.get_status_display }}
+        </div>
+        <div class="term-actions">
+            <button class="btn btn-icon edit-term" aria-label="Edit term">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                </svg>
+            </button>
+            {% if not term.is_locked %}
+            <button class="btn btn-icon delete-term" aria-label="Delete term">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                </svg>
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="term-content">
+        <h3 class="term-name">{{ term.name }}</h3>
+        <div class="term-dates">
+            <div class="date-range">
+                <span class="date-label">Start:</span>
+                <span class="date-value">{{ term.start_date|date:"M d, Y" }}</span>
+            </div>
+            <div class="date-range">
+                <span class="date-label">End:</span>
+                <span class="date-value">{{ term.end_date|date:"M d, Y" }}</span>
+            </div>
+        </div>
+        <div class="term-meta">
+            <div class="meta-item">
+                <span class="meta-label">Type:</span>
+                <span class="meta-value">{{ term.term_type }}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">School Year:</span>
+                <span class="meta-value">{{ term.school_year }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="term-footer">
+        <div class="term-stats">
+            <div class="stat-item">
+                <span class="stat-value">{{ term.total_days }}</span>
+                <span class="stat-label">Days</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-value">{{ term.total_periods }}</span>
+                <span class="stat-label">Periods</span>
+            </div>
+        </div>
+        {% if term.description %}
+        <div class="term-description">
+            {{ term.description }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Term Edit Modal Template -->
+<div class="modal term-edit-modal" id="termEditModal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>Edit Term</h4>
+            <button class="btn btn-icon close-modal" aria-label="Close modal">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="termEditForm">
+                <div class="form-group">
+                    <label for="termName">Term Name</label>
+                    <input type="text" id="termName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="termType">Term Type</label>
+                    <select id="termType" name="term_type" required>
+                        <option value="semester">Semester</option>
+                        <option value="quarter">Quarter</option>
+                        <option value="trimester">Trimester</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="startDate">Start Date</label>
+                    <input type="date" id="startDate" name="start_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="endDate">End Date</label>
+                    <input type="date" id="endDate" name="end_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary cancel-edit">Cancel</button>
+                    <button type="submit" class="btn btn-primary save-term">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
