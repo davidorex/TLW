@@ -19,6 +19,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    # Third-party apps
+    'rest_framework',
+    'simple_history',
+    'django_filters',
+    'crispy_forms',
+    'allauth',
+    
     # Core apps
     'core.apps.CoreConfig',
     
@@ -79,7 +86,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    }
 ]
 
 # Internationalization
