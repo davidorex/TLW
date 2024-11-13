@@ -1,0 +1,61 @@
+{
+    "optimization_directive": {
+        "target": "PeriodTemplate",
+        "core_strategy": "Performance-Optimized Caching",
+        "performance_goals": [
+            "Minimize computational overhead",
+            "Optimize read-heavy operations",
+            "Reduce database query complexity"
+        ],
+        "implementation_phases": [
+            {
+                "phase": 1,
+                "tasks": [
+                    "Modify PeriodTemplate model",
+                    "Add cached_periods JSONField",
+                    "Implement get_cached_periods method"
+                ],
+                "files_impacted": [
+                    "schoolcalendar/models/period_template.py"
+                ]
+            },
+            {
+                "phase": 2,
+                "tasks": [
+                    "Update serializer to handle cached_periods",
+                    "Modify ViewSet to return cached periods",
+                    "Update frontend rendering logic"
+                ],
+                "files_impacted": [
+                    "schoolcalendar/serializers.py",
+                    "schoolcalendar/views.py",
+                    "static/js/components/period_template_manager.html"
+                ]
+            }
+        ],
+        "caching_strategy": {
+            "method": "Long-term template caching",
+            "cache_duration": 2592000,
+            "invalidation_trigger": "template save"
+        },
+        "indexing_strategy": {
+            "indexes": [
+                ["effective_from", "version"],
+                ["name", "version"],
+                ["is_default"],
+                ["name", "version", "effective_from"]
+            ]
+        },
+        "migration_considerations": [
+            "Create migration for cached_periods field",
+            "Ensure existing templates generate cached periods on first save"
+        ],
+        "performance_metrics": {
+            "expected_improvements": [
+                "Reduced database queries",
+                "Faster template retrieval",
+                "Minimal runtime period generation overhead"
+            ]
+        }
+    }
+}

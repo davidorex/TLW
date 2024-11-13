@@ -1,0 +1,65 @@
+{
+  "acknowledgments": {
+    "patterns": {
+      "state_changes": "[{action}: {key}]",
+      "context_switches": "[Context: {scope}]",
+      "loads": "[Loaded: {pattern}]"
+    },
+    "format": "bracketed_inline"
+  },
+  "reference_syntax": {
+    "compressed": {
+      "files": "f:{name}",
+      "functions": "fn:{name}",
+      "patterns": "p:{name}",
+      "tests": "t:{name}"
+    },
+    "optimization": {
+      "use_short_refs": true,
+      "minimal_context": true,
+      "clear_indicators": true
+    }
+  },
+  "pattern_storage": {
+    "format": {
+      "k": "key_identifier",
+      "p": "pattern_type",
+      "d": "dependencies",
+      "i": "interfaces"
+    },
+    "compression": {
+      "use_short_keys": true,
+      "array_for_lists": true,
+      "minimal_required": true
+    }
+  },
+  "state_management": {
+    "transitions": {
+      "save_current": "!save current_task",
+      "clear_partial": "!clear partial",
+      "load_new": "!load new_task"
+    },
+    "scope_tracking": {
+      "maintain": [
+        "current_file",
+        "active_patterns",
+        "required_interfaces",
+        "test_contexts"
+      ]
+    }
+  },
+  "improvements": {
+    "add_features": [
+      "explicit_acknowledgments",
+      "compressed_refs",
+      "pattern_storage",
+      "minimal_syntax"
+    ],
+    "optimize": [
+      "reference_format",
+      "state_indicators",
+      "context_tracking",
+      "pattern_compression"
+    ]
+  }
+}

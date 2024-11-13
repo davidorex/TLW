@@ -1,0 +1,74 @@
+{
+  "architectural_patterns": {
+    "django": {
+      "core": {
+        "models": "abstract_base_inheritance",
+        "views": "class_based_views",
+        "urls": "namespaced_routing"
+      },
+      "patterns": [
+        "model_inheritance",
+        "template_composition",
+        "view_mixins"
+      ]
+    },
+    "frontend": {
+      "structure": "component_based",
+      "patterns": [
+        "template_inheritance",
+        "widget_composition",
+        "event_delegation"
+      ]
+    }
+  },
+  "data_patterns": {
+    "period_template": {
+      "core_concept": "template_inheritance",
+      "relationships": {
+        "template_content": "one_to_many",
+        "quarter_binding": "contextual_reference"
+      }
+    },
+    "calendar": {
+      "hierarchy": ["school_year", "term", "quarter"],
+      "period_binding": "template_based"
+    }
+  },
+  "optimization_patterns": {
+    "queries": [
+      "select_related_usage",
+      "prefetch_related_optimization",
+      "cached_properties"
+    ],
+    "caching": [
+      "template_fragment_caching",
+      "query_result_caching",
+      "session_state_caching"
+    ]
+  },
+  "constraints": {
+    "technical": [
+      "django_orm_patterns",
+      "frontend_performance",
+      "data_integrity"
+    ],
+    "business": [
+      "schedule_flexibility",
+      "template_reusability",
+      "user_efficiency"
+    ]
+  },
+  "references": {
+    "key_models": [
+      "PeriodTemplate",
+      "PeriodContent",
+      "Quarter",
+      "SchoolYear"
+    ],
+    "core_components": [
+      "period_template_manager",
+      "calendar_widget",
+      "term_manager"
+    ]
+  }
+}

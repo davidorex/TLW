@@ -1,0 +1,78 @@
+{
+  "context_restoration": {
+    "initial_load": {
+      "sequence": [
+        "current_state",
+        "component_context",
+        "core_patterns"
+      ],
+      "acknowledgments": {
+        "state": "[Loaded: current_state]",
+        "context": "[Context: {component}]",
+        "patterns": "[Loaded: core_patterns]"
+      }
+    },
+    "progressive_loading": {
+      "strategy": "minimal_first",
+      "reference_syntax": {
+        "files": "f:{name}",
+        "functions": "fn:{name}",
+        "patterns": "p:{name}",
+        "tests": "t:{name}"
+      }
+    }
+  },
+  "state_management": {
+    "transitions": {
+      "pre_switch": {
+        "actions": [
+          "save_progress",
+          "compress_state",
+          "clear_unused"
+        ],
+        "acknowledgments": {
+          "save": "[Saved: {state_key}]",
+          "compress": "[Compressed: {content}]",
+          "clear": "[Cleared: partial]"
+        }
+      },
+      "post_switch": {
+        "actions": [
+          "load_minimal",
+          "verify_state",
+          "build_context"
+        ],
+        "acknowledgments": {
+          "load": "[Loaded: {context}]",
+          "verify": "[Verified: {state}]",
+          "ready": "[Context: ready]"
+        }
+      }
+    }
+  },
+  "efficiency_rules": {
+    "token_optimization": {
+      "use_compressed_refs": true,
+      "minimal_acknowledgments": true,
+      "pattern_storage": {
+        "format": {
+          "k": "key",
+          "p": "pattern",
+          "d": "deps",
+          "i": "interfaces"
+        }
+      }
+    },
+    "context_maintenance": {
+      "active_state": {
+        "track": [
+          "f:current_file",
+          "p:active_patterns",
+          "i:required_interfaces",
+          "t:active_tests"
+        ],
+        "acknowledge_changes": true
+      }
+    }
+  }
+}
