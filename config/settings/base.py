@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_forms',
     'allauth',
+    'django_extensions',  # Added django-extensions
     
     # Core apps
     'core.apps.CoreConfig',
