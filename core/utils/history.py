@@ -31,8 +31,9 @@ class ExtendedHistoricalRecords(HistoricalRecords):
     def post_save(self, instance: models.Model, created: bool, **kwargs: Any) -> None:
         """Custom post save to include additional metadata."""
         history_instance = self.create_historical_record(instance, created and '+' or '~')
-        history_instance.change_reason = getattr(instance, '_change_reason', None)
-        history_instance.save()
+        if history_instance is not None:
+            history_instance.change_reason = getattr(instance, '_change_reason', None)
+            history_instance.save()
 
 def diff_historical_records(old: models.Model, new: models.Model) -> Dict[str, Dict[str, Any]]:
     """Compare two historical records and return differences."""

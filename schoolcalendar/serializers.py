@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Term, SchoolYear
+from .models import Term, SchoolYear, PeriodTemplate
 
 class TermSerializer(serializers.ModelSerializer):
     total_days = serializers.IntegerField(read_only=True)
@@ -41,4 +41,31 @@ class SchoolYearSerializer(serializers.ModelSerializer):
         """
         if data['start_date'] > data['end_date']:
             raise serializers.ValidationError("End date must be after start date")
+        return data
+
+class PeriodTemplateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PeriodTemplate
+        fields = [
+            'id', 'name', 'schedule_type', 'effective_from', 'morning_periods',
+            'afternoon_periods', 'evening_periods', 'period_length', 'passing_time',
+            'first_period', 'is_default', 'version', 'metadata'
+        ]
+        
+    def validate(self, data):
+        """
+        Validate period template data.
+        """
+        # For partial updates, combine with existing instance data
+        if self.instance:
+            morning = data.get('morning_periods', self.instance.morning_periods)
+            afternoon = data.get('afternoon_periods', self.instance.afternoon_periods)
+            evening = data.get('evening_periods', self.instance.evening_periods)
+        else:
+            morning = data.get('morning_periods', 0)
+            afternoon = data.get('afternoon_periods', 0)
+            evening = data.get('evening_periods', 0)
+
+        if morning + afternoon + evening == 0:
+            raise serializers.ValidationError("Total periods must be greater than zero")
         return data

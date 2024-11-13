@@ -1,0 +1,20 @@
+{
+  "fix_instructions": [
+    {
+      "task": "Update PeriodTemplateFactory",
+      "details": "Ensure the factory includes the 'is_default' field to manage default templates correctly."
+    },
+    {
+      "task": "Verify SchoolYearFactory",
+      "details": "Check the 'term_structure' attribute in the SchoolYearFactory. Confirm its necessity and alignment with the SchoolYear model. If it is not needed, seek explicit confirmation before making changes."
+    },
+    {
+      "task": "Initialize Change Reason",
+      "details": "In models using ExtendedHistoricalRecords, initialize the '_change_reason' attribute before saving to prevent AttributeError."
+    },
+    {
+      "task": "Review Model and Signal Logic",
+      "details": "Ensure that the save method and any related signals in the PeriodTemplate model do not rely on uninitialized attributes."
+    }
+  ]
+}

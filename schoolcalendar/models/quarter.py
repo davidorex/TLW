@@ -60,6 +60,40 @@ class Quarter(MetadataModel):
     Represents academic quarters within a semester term.
     """
 
+    METADATA_SCHEMA = {
+        "type": "object",
+        "properties": {
+            "reporting_dates": {
+                "type": "object",
+                "properties": {
+                    "grades_due": {"type": "string", "format": "date"},
+                    "reports_published": {"type": "string", "format": "date"},
+                    "parent_meetings": {
+                        "type": "object",
+                        "properties": {
+                            "start": {"type": "string", "format": "date"},
+                            "end": {"type": "string", "format": "date"}
+                        },
+                        "required": ["start", "end"]
+                    }
+                },
+                "required": ["grades_due", "reports_published", "parent_meetings"]
+            },
+            "assessment_weeks": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "week_number": {"type": "integer", "minimum": 1},
+                        "type": {"type": "string", "enum": ["formative", "summative"]}
+                    },
+                    "required": ["week_number", "type"]
+                }
+            }
+        },
+        "required": ["reporting_dates", "assessment_weeks"]
+    }
+
     QUARTER_TYPES = [
         ('Q1', _('Quarter 1')),
         ('Q2', _('Quarter 2')),
