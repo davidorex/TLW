@@ -1,10 +1,15 @@
-from django.views.generic import TemplateView
+from rest_framework import viewsets
+from .models import Term, SchoolYear, PeriodTemplate
+from .serializers import TermSerializer, SchoolYearSerializer, PeriodTemplateSerializer
 
-class CalendarView(TemplateView):
-    template_name = 'schoolcalendar/views/calendar.html'
+class TermViewSet(viewsets.ModelViewSet):
+    queryset = Term.objects.all()
+    serializer_class = TermSerializer
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Placeholder for calendar context data
-        context['calendar_version'] = '2.0'
-        return context
+class SchoolYearViewSet(viewsets.ModelViewSet):
+    queryset = SchoolYear.objects.all()
+    serializer_class = SchoolYearSerializer
+
+class PeriodTemplateViewSet(viewsets.ModelViewSet):
+    queryset = PeriodTemplate.objects.all()
+    serializer_class = PeriodTemplateSerializer

@@ -9,7 +9,7 @@ class SchoolYearFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: f'School Year {n}')
     start_date = factory.LazyFunction(timezone.now().date)
     end_date = factory.LazyFunction(lambda: timezone.now().date() + timezone.timedelta(days=365))
-    term_structure = factory.Iterator(['SEMESTER', 'TRIMESTER'])
+    term_type = factory.Iterator(['SEMESTER', 'TRIMESTER'])
 
 class TermFactory(factory.django.DjangoModelFactory):
     class Meta:
@@ -20,18 +20,18 @@ class TermFactory(factory.django.DjangoModelFactory):
     sequence = factory.Sequence(lambda n: n + 1)
     
     term_type = factory.LazyAttribute(
-        lambda o: f"{'SEM' if o.year.term_structure == 'SEMESTER' else 'TRI'}{o.sequence}"
+        lambda o: f"{'SEM' if o.year.term_type == 'SEMESTER' else 'TRI'}{o.sequence}"
     )
     
     start_date = factory.LazyAttribute(
         lambda obj: obj.year.start_date + timezone.timedelta(
-            days=int((obj.sequence - 1) * (365 / (3 if obj.year.term_structure == 'TRIMESTER' else 2)))
+            days=int((obj.sequence - 1) * (365 / (3 if obj.year.term_type == 'TRIMESTER' else 2)))
         )
     )
     
     end_date = factory.LazyAttribute(
         lambda obj: obj.start_date + timezone.timedelta(
-            days=int(365 / (3 if obj.year.term_structure == 'TRIMESTER' else 2)) - 1
+            days=int(365 / (3 if obj.year.term_type == 'TRIMESTER' else 2)) - 1
         )
     )
 
@@ -114,7 +114,7 @@ class PeriodTemplateFactory(factory.django.DjangoModelFactory):
     
     first_period = factory.LazyFunction(lambda: timezone.now().time().replace(hour=8, minute=0))
     
-    version = factory.Sequence(lambda n: n + 1)
+    version = 1  # Fixed version number instead of sequence
 
     @factory.post_generation
     def with_periods(obj, create, extracted, **kwargs):

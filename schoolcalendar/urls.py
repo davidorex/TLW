@@ -1,8 +1,12 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import TermViewSet, SchoolYearViewSet, PeriodTemplateViewSet
 
-app_name = 'schoolcalendar'
+router = DefaultRouter()
+router.register(r'terms', TermViewSet)
+router.register(r'school-years', SchoolYearViewSet)
+router.register(r'period-templates', PeriodTemplateViewSet)
 
 urlpatterns = [
-    path('', views.CalendarView.as_view(), name='index'),
+    path('', include(router.urls)),
 ]
