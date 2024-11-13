@@ -1,0 +1,53 @@
+{
+  "active_context": {
+    "component": "period_template",
+    "focus": "optimization",
+    "phase": "implementation"
+  },
+  "current_priorities": [
+    {
+      "area": "query_optimization",
+      "scope": "period_template_relationships",
+      "refs": ["development/vectors/period_template/current_state.json"]
+    },
+    {
+      "area": "frontend_integration",
+      "scope": "template_manager_component",
+      "refs": ["knowledge/core/architecture.json#frontend"]
+    }
+  ],
+  "active_patterns": {
+    "implementation": [
+      "template_inheritance",
+      "query_optimization",
+      "component_integration"
+    ],
+    "constraints": [
+      "maintain_data_integrity",
+      "ensure_performance",
+      "preserve_flexibility"
+    ]
+  },
+  "key_references": {
+    "models": {
+      "path": "schoolcalendar/models/period_template.py",
+      "context": "template_system_core"
+    },
+    "components": {
+      "path": "schoolcalendar/templates/schoolcalendar/components/period_template_manager.html",
+      "context": "frontend_integration"
+    }
+  },
+  "token_optimization": {
+    "priority_contexts": [
+      "period_template_optimization",
+      "query_efficiency",
+      "frontend_integration"
+    ],
+    "compressed_refs": {
+      "arch": "knowledge/core/architecture.json",
+      "dev": "development/vectors/period_template/current_state.json",
+      "vision": "vision/current/overview_gpt.json"
+    }
+  }
+}

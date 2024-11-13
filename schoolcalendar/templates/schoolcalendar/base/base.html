@@ -1,9 +1,13 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}School Calendar{% endblock %}</title>
+    
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
     
     {% block extra_head %}
     <!-- Placeholder for additional head content -->
@@ -26,10 +30,13 @@
 
     <footer>
         {% block footer %}
-        <p>&copy; {% now "Y" %} School Calendar Application</p>
+        <p>&copy; {% now "Y" %} Learning Workshop</p>
         {% endblock %}
     </footer>
 
+    <script src="{% static 'js/utils.js' %}"></script>
+    <script src="{% static 'js/api.js' %}"></script>
+    
     {% block extra_scripts %}
     <!-- Placeholder for additional scripts -->
     {% endblock %}

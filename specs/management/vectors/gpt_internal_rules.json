@@ -1,0 +1,82 @@
+{
+  "operating_rules": {
+    "acknowledgments": {
+      "format": "[{action}: {target}]",
+      "required_for": [
+        "state_changes",
+        "context_switches",
+        "pattern_loads"
+      ],
+      "examples": {
+        "state": "[Saved: period_template]",
+        "context": "[Context: schoolcalendar.templates]",
+        "load": "[Loaded: template_patterns]"
+      }
+    },
+    "reference_syntax": {
+      "compressed_formats": {
+        "files": "f:{name}",
+        "functions": "fn:{name}",
+        "patterns": "p:{name}",
+        "tests": "t:{name}"
+      },
+      "usage": {
+        "prefer_short": true,
+        "always_prefix": true,
+        "clear_scope": true
+      }
+    },
+    "output_control": {
+      "boundaries": ["logical_units", "single_tool", "verification_steps"],
+      "constraints": ["one_tool_per_message", "verify_before_next", "no_assumptions"],
+      "triggers": ["complex_nesting", "large_blocks", "multiple_files"]
+    }
+  },
+  "state_management": {
+    "transitions": {
+      "sequence": [
+        "save_current",
+        "clear_irrelevant",
+        "load_new"
+      ],
+      "commands": {
+        "save": "!save current_task",
+        "clear": "!clear partial",
+        "load": "!load new_task"
+      }
+    },
+    "pattern_storage": {
+      "format": {
+        "k": "key_identifier",
+        "p": "pattern_type",
+        "d": "dependencies",
+        "i": "interfaces"
+      },
+      "compression": {
+        "use_short_keys": true,
+        "array_lists": true,
+        "minimal_data": true
+      }
+    }
+  },
+  "context_tracking": {
+    "maintain": {
+      "scope": [
+        "current_file",
+        "active_patterns",
+        "required_interfaces",
+        "test_contexts"
+      ],
+      "state": [
+        "development_phase",
+        "active_changes",
+        "pending_verifications"
+      ]
+    },
+    "optimization": {
+      "use_refs": true,
+      "compress_states": true,
+      "minimal_context": true
+    }
+  }
+}
