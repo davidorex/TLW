@@ -1,11 +1,16 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}School Calendar{% endblock %}</title>
+    <title>{% block title %}{% trans "School Calendar" %}{% endblock %}</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    
+    <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/components.css' %}">
     
@@ -13,29 +18,112 @@
     <!-- Placeholder for additional head content -->
     {% endblock %}
 </head>
-<body>
-    <header>
+<body class="site-wrapper">
+    <header class="site-header">
         {% block header %}
-        <nav>
-            <h1>School Calendar System</h1>
+        <nav class="main-nav">
+            <div class="nav-brand">
+                <h1>{% trans "School Calendar System" %}</h1>
+            </div>
+
+            <div class="nav-controls">
+                <!-- Language Selector -->
+                {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% get_language_info_list for LANGUAGES as languages %}
+                
+                <div class="language-selector">
+                    <form action="{% url 'set_language' %}" method="post" class="language-form">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.path }}">
+                        <select name="language" onchange="this.form.submit()" aria-label="{% trans 'Select language' %}">
+                            {% for language in languages %}
+                                <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                                    {{ language.name_local }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle" aria-label="{% trans 'Toggle menu' %}">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            <!-- Navigation Items -->
+            <div class="nav-items">
+                <ul>
+                    <li><a href="{% url 'schoolcalendar:index' %}" {% if request.resolver_match.url_name == 'index' %}class="active"{% endif %}>
+                        {% trans "Calendar" %}
+                    </a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'schoolcalendar:dashboard' %}" {% if request.resolver_match.url_name == 'dashboard' %}class="active"{% endif %}>
+                            {% trans "Dashboard" %}
+                        </a></li>
+                        <li><a href="{% url 'logout' %}">{% trans "Logout" %}</a></li>
+                    {% else %}
+                        <li><a href="{% url 'login' %}">{% trans "Login" %}</a></li>
+                    {% endif %}
+                </ul>
+            </div>
         </nav>
         {% endblock %}
     </header>
 
-    <main>
+    <main class="site-main">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         {% block content %}
         <!-- Main content will be inserted by child templates -->
         {% endblock %}
     </main>
 
-    <footer>
+    <footer class="site-footer">
         {% block footer %}
-        <p>&copy; {% now "Y" %} Learning Workshop</p>
+        <div class="container">
+            <p>{% blocktrans trimmed with year=current_year %}
+                © {{ year }} Learning Workshop. All rights reserved.
+            {% endblocktrans %}</p>
+        </div>
         {% endblock %}
     </footer>
 
+    <!-- Core JavaScript -->
     <script src="{% static 'js/utils.js' %}"></script>
     <script src="{% static 'js/api.js' %}"></script>
+    
+    <!-- Initialize mobile menu -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.querySelector('.mobile-menu-toggle');
+            const navItems = document.querySelector('.nav-items');
+            
+            mobileMenuBtn?.addEventListener('click', () => {
+                mobileMenuBtn.classList.toggle('active');
+                navItems.classList.toggle('active');
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.main-nav') && navItems.classList.contains('active')) {
+                    mobileMenuBtn.classList.remove('active');
+                    navItems.classList.remove('active');
+                }
+            });
+        });
+    </script>
     
     {% block extra_scripts %}
     <!-- Placeholder for additional scripts -->

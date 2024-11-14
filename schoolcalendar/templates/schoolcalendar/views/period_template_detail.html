@@ -1,0 +1,63 @@
+{% extends "schoolcalendar/base/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ template.name }}{% endblock %}
+
+{% block content %}
+<div class="period-template-detail">
+    <div class="page-header">
+        <h1>{{ template.name }}</h1>
+        <a href="{% url 'schoolcalendar:periodtemplate-update' template.pk %}" class="btn btn-primary">
+            {% trans "Edit Template" %}
+        </a>
+    </div>
+
+    <div class="template-info-card">
+        <div class="info-section">
+            <h2>{% trans "Basic Information" %}</h2>
+            <dl>
+                <dt>{% trans "Schedule Type" %}</dt>
+                <dd>{{ template.schedule_type }}</dd>
+
+                <dt>{% trans "Effective From" %}</dt>
+                <dd>{{ template.effective_from|date:"Y-m-d" }}</dd>
+
+                <dt>{% trans "First Period Starts" %}</dt>
+                <dd>{{ template.first_period|time:"H:i" }}</dd>
+            </dl>
+        </div>
+
+        <div class="info-section">
+            <h2>{% trans "Period Configuration" %}</h2>
+            <dl>
+                <dt>{% trans "Morning Periods" %}</dt>
+                <dd>{{ template.morning_periods }}</dd>
+
+                <dt>{% trans "Afternoon Periods" %}</dt>
+                <dd>{{ template.afternoon_periods }}</dd>
+
+                <dt>{% trans "Evening Periods" %}</dt>
+                <dd>{{ template.evening_periods }}</dd>
+
+                <dt>{% trans "Period Length" %}</dt>
+                <dd>{{ template.period_length }} {% trans "minutes" %}</dd>
+
+                <dt>{% trans "Passing Time" %}</dt>
+                <dd>{{ template.passing_time }} {% trans "minutes" %}</dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="schedule-preview">
+        <h2>{% trans "Daily Schedule Preview" %}</h2>
+        <div class="timeline">
+            {% for period in template.get_daily_schedule %}
+                <div class="period-block">
+                    <span class="time">{{ period.start_time|time:"H:i" }} - {{ period.end_time|time:"H:i" }}</span>
+                    <span class="label">{{ period.name }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,187 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2024-11-14",
+  "commands": {
+    "recontextualize": {
+      "syntax": "!recon {scope}",
+      "description": "Rebuild context with optimal token usage",
+      "pattern_integration": {
+        "uses": ["context_restoration", "state_management"],
+        "refs": ["gpt_recontextualization.json", "gpt_internal_rules.json"]
+      },
+      "execution": {
+        "sequence": [
+          "save_current_state",
+          "clear_partial_context",
+          "load_minimal_context",
+          "progressive_load_scope"
+        ],
+        "acknowledgments": {
+          "start": "[Recontextualize: {scope}]",
+          "progress": "[Loading: {context_type}]",
+          "complete": "[Context: ready]"
+        },
+        "state_format": {
+          "k": "recon",
+          "p": ["scope", "context"],
+          "d": ["dependencies"],
+          "i": ["interfaces"]
+        }
+      }
+    },
+    "switch_role": {
+      "syntax": "!role {role_name}",
+      "description": "Switch to specified role with context preservation",
+      "pattern_integration": {
+        "uses": ["role_definitions", "state_transitions"],
+        "refs": ["role_definitions.json", "gpt_internal_rules.json"]
+      },
+      "execution": {
+        "sequence": [
+          "save_role_state",
+          "clear_role_specific",
+          "load_new_role",
+          "verify_role_state"
+        ],
+        "acknowledgments": {
+          "start": "[Role: switching_{role_name}]",
+          "complete": "[Role: {role_name}_ready]"
+        }
+      }
+    },
+    "snapshot": {
+      "syntax": "!snap {key}",
+      "description": "Save current state and context",
+      "pattern_integration": {
+        "uses": ["state_management", "pattern_storage"],
+        "refs": ["gpt_internal_rules.json", "interaction_patterns.json"]
+      },
+      "execution": {
+        "sequence": [
+          "compress_current_state",
+          "store_active_patterns",
+          "save_compressed_refs"
+        ],
+        "acknowledgments": {
+          "start": "[Snapshot: creating_{key}]",
+          "complete": "[Snapshot: {key}_saved]"
+        },
+        "state_format": {
+          "k": "snap",
+          "p": ["state", "patterns"],
+          "d": ["context"],
+          "i": ["active_refs"]
+        }
+      }
+    },
+    "restore": {
+      "syntax": "!restore {key}",
+      "description": "Restore from saved snapshot",
+      "pattern_integration": {
+        "uses": ["state_management", "context_restoration"],
+        "refs": ["gpt_recontextualization.json"]
+      },
+      "execution": {
+        "sequence": [
+          "load_snapshot",
+          "verify_state",
+          "rebuild_context",
+          "restore_patterns"
+        ],
+        "acknowledgments": {
+          "start": "[Restore: loading_{key}]",
+          "complete": "[Restore: {key}_ready]"
+        }
+      }
+    },
+    "focus": {
+      "syntax": "!focus {target}",
+      "description": "Optimize context for specific target",
+      "pattern_integration": {
+        "uses": ["context_restoration", "token_optimization"],
+        "refs": ["gpt_recontextualization.json"]
+      },
+      "execution": {
+        "sequence": [
+          "identify_relevant_context",
+          "clear_irrelevant",
+          "load_target_specific",
+          "optimize_tokens"
+        ],
+        "acknowledgments": {
+          "start": "[Focus: targeting_{target}]",
+          "complete": "[Focus: {target}_active]"
+        },
+        "state_format": {
+          "k": "focus",
+          "p": ["target", "context"],
+          "d": ["dependencies"],
+          "i": ["interfaces"]
+        }
+      }
+    },
+    "analyze": {
+      "syntax": "!analyze {aspect}",
+      "description": "Deep analysis of specified aspect",
+      "pattern_integration": {
+        "uses": ["pattern_storage", "token_optimization"],
+        "refs": ["interaction_patterns.json"]
+      },
+      "execution": {
+        "sequence": [
+          "load_analysis_patterns",
+          "gather_relevant_data",
+          "perform_analysis",
+          "store_findings"
+        ],
+        "acknowledgments": {
+          "start": "[Analysis: starting_{aspect}]",
+          "complete": "[Analysis: {aspect}_complete]"
+        }
+      }
+    }
+  },
+  "meta_commands": {
+    "help": {
+      "syntax": "!help {command?}",
+      "description": "Show command details and usage",
+      "execution": {
+        "no_params": "List all commands",
+        "with_command": "Show specific command details"
+      }
+    },
+    "status": {
+      "syntax": "!status",
+      "description": "Show current state and context",
+      "execution": {
+        "show": [
+          "current_role",
+          "active_context",
+          "loaded_patterns"
+        ]
+      }
+    }
+  },
+  "command_patterns": {
+    "execution": {
+      "pre_command": [
+        "verify_syntax",
+        "check_prerequisites",
+        "prepare_context"
+      ],
+      "post_command": [
+        "verify_execution",
+        "update_state",
+        "optimize_context"
+      ]
+    },
+    "error_handling": {
+      "syntax": "[Error: {type}_{detail}]",
+      "recovery": {
+        "invalid_syntax": "Show correct usage",
+        "missing_context": "Attempt recontextualization",
+        "state_error": "Attempt state recovery"
+      }
+    }
+  }
+}
