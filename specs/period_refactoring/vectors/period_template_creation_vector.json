@@ -1,0 +1,88 @@
+{
+  "meta": {
+    "type": "implementation_vector",
+    "version": "1.0",
+    "context": "local_development",
+    "related_specs": [
+      "period_definition_analysis_p1.md",
+      "period_definition_analysis_p2.md",
+      "period_definition_analysis_p3.md",
+      "migration_implications.md"
+    ],
+    "priority": "high",
+    "complexity": "medium",
+    "timeline": "day_1"
+  },
+  "method": {
+    "name": "create_with_periods",
+    "type": "classmethod",
+    "target": "PeriodTemplate",
+    "transaction": true,
+    "args": ["data", "period_data"],
+    "returns": "PeriodTemplate"
+  },
+  "validation": {
+    "required_fields": ["number", "length", "start", "type"],
+    "constraints": {
+      "length": {"min": 30, "max": 120},
+      "passing": {"min": 0, "max": 30, "optional": true},
+      "periods": {"min_count": 1}
+    },
+    "rules": [
+      {"type": "no_overlap", "check": "start_time < existing_end && end_time > existing.start"},
+      {"type": "unique_numbers", "scope": "template"}
+    ]
+  },
+  "implementation": {
+    "steps": [
+      {"op": "validate_input", "check": "period_data.length > 0"},
+      {"op": "validate_fields", "target": "each_period", "against": "required_fields"},
+      {"op": "transaction_start"},
+      {"op": "create_template", "data": "template_data"},
+      {"op": "validate_periods", "checks": ["length", "passing", "overlap"]},
+      {"op": "bulk_create", "model": "PeriodDefinition"},
+      {"op": "return_template"}
+    ],
+    "dependencies": {
+      "models": ["PeriodTemplate", "PeriodDefinition"],
+      "imports": ["transaction", "ValidationError", "time"]
+    }
+  },
+  "error_handling": {
+    "types": [
+      {"case": "missing_fields", "level": "validation"},
+      {"case": "invalid_length", "level": "validation"},
+      {"case": "invalid_passing", "level": "validation"},
+      {"case": "period_overlap", "level": "validation"},
+      {"case": "db_error", "level": "transaction"}
+    ]
+  },
+  "example_usage": {
+    "template_data": {
+      "name": "Standard",
+      "description": "Regular schedule"
+    },
+    "period_data": [{
+      "number": 1,
+      "length": 45,
+      "start": "08:00",
+      "type": "CLASS",
+      "passing": 5
+    }]
+  },
+  "tests": [
+    {"case": "valid_creation", "expect": "success"},
+    {"case": "missing_fields", "expect": "ValidationError"},
+    {"case": "period_overlap", "expect": "ValidationError"}
+  ],
+  "integration": {
+    "phase": "initial_implementation",
+    "affects": [
+      "template_creation",
+      "period_management",
+      "schedule_generation"
+    ],
+    "testing_priority": "high",
+    "deployment_gate": "test_coverage"
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "meta": {
+    "type": "state_management_vector",
+    "version": "1.0",
+    "context": "period_definition",
+    "purpose": "Implementation state and context management"
+  },
+  "state_management": {
+    "checkpoint_file": "implementation_state.json",
+    "state_structure": {
+      "global_state": {
+        "current_vector": "string",
+        "current_phase": "string",
+        "completed_steps": ["string"],
+        "pending_steps": ["string"],
+        "last_checkpoint": "timestamp",
+        "resume_point": "string"
+      },
+      "context_preservation": {
+        "active_files": ["string"],
+        "modified_files": ["string"],
+        "validation_state": "json",
+        "error_state": "json",
+        "implementation_notes": "string"
+      },
+      "vector_states": {
+        "creation": {
+          "status": "enum(not_started|in_progress|completed)",
+          "checkpoint": "string",
+          "dependencies_met": "boolean"
+        },
+        "validation": {
+          "status": "enum(not_started|in_progress|completed)",
+          "checkpoint": "string",
+          "dependencies_met": "boolean"
+        },
+        "cache": {
+          "status": "enum(not_started|in_progress|completed)",
+          "checkpoint": "string",
+          "dependencies_met": "boolean"
+        },
+        "migration": {
+          "status": "enum(not_started|in_progress|completed)",
+          "checkpoint": "string",
+          "dependencies_met": "boolean"
+        }
+      }
+    }
+  },
+  "operations": {
+    "checkpoint": {
+      "frequency": {
+        "time_based": "5m",
+        "step_based": "after_each_step",
+        "state_change": "on_significant_change"
+      },
+      "triggers": [
+        "file_modification",
+        "step_completion",
+        "error_occurrence",
+        "manual_request"
+      ]
+    },
+    "resume": {
+      "strategy": {
+        "load_state": "Load last valid state",
+        "verify_consistency": "Check file states match checkpoint",
+        "rebuild_context": "Reload necessary files",
+        "continue_execution": "Resume from last checkpoint"
+      },
+      "validation": [
+        "state_file_integrity",
+        "file_system_consistency",
+        "dependency_check"
+      ]
+    }
+  },
+  "progress_tracking": {
+    "metrics": {
+      "completion_percentage": "float",
+      "time_elapsed": "duration",
+      "steps_completed": "integer",
+      "steps_remaining": "integer",
+      "current_phase": "string"
+    },
+    "status_report": {
+      "format": {
+        "summary": "string",
+        "detailed_status": "json",
+        "next_steps": ["string"],
+        "blocking_issues": ["string"]
+      },
+      "persistence": {
+        "file": "implementation_status.json",
+        "update_frequency": "real_time"
+      }
+    }
+  },
+  "error_handling": {
+    "strategies": {
+      "rate_limit": {
+        "detection": "Monitor API response codes",
+        "action": "Checkpoint and pause",
+        "resume": "Wait and retry with backoff"
+      },
+      "context_loss": {
+        "detection": "State validation failure",
+        "action": "Reload from last valid checkpoint",
+        "recovery": "Rebuild context and continue"
+      },
+      "interruption": {
+        "detection": "Process termination",
+        "action": "Emergency checkpoint",
+        "resume": "Validate and restore state"
+      }
+    }
+  },
+  "implementation": {
+    "commands": {
+      "save_state": {
+        "action": "Save current implementation state",
+        "trigger": "Manual or automatic"
+      },
+      "load_state": {
+        "action": "Load saved implementation state",
+        "trigger": "On resume"
+      },
+      "status": {
+        "action": "Show current implementation status",
+        "trigger": "On demand"
+      }
+    },
+    "state_files": {
+      "locations": {
+        "state": "specs/state/",
+        "backup": "specs/state/backup/",
+        "logs": "specs/state/logs/"
+      },
+      "formats": {
+        "state": "json",
+        "logs": "jsonl",
+        "backup": "json.bak"
+      }
+    }
+  },
+  "context_management": {
+    "preservation": {
+      "code_context": {
+        "modified_files": ["path"],
+        "active_changes": ["diff"],
+        "implementation_notes": "string"
+      },
+      "decision_context": {
+        "last_decisions": ["string"],
+        "rationale": ["string"],
+        "alternatives": ["string"]
+      },
+      "environment_context": {
+        "dependencies": ["string"],
+        "configurations": ["string"],
+        "active_processes": ["string"]
+      }
+    },
+    "restoration": {
+      "steps": [
+        "load_state_file",
+        "verify_file_system",
+        "rebuild_code_context",
+        "restore_decision_context",
+        "validate_environment"
+      ],
+      "verification": {
+        "checks": [
+          "file_consistency",
+          "state_validity",
+          "context_completeness"
+        ],
+        "actions": {
+          "success": "continue_execution",
+          "failure": "fallback_to_last_valid"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "meta": {
+    "type": "migration_vector",
+    "version": "1.0",
+    "context": "local_development",
+    "related_specs": [
+      "period_template_creation_vector.json",
+      "period_validation_vector.json",
+      "period_cache_vector.json"
+    ],
+    "priority": "high",
+    "complexity": "medium",
+    "timeline": "day_1"
+  },
+  "migrations": {
+    "sequence": [
+      {
+        "name": "create_period_definition",
+        "type": "model",
+        "dependencies": [],
+        "operations": [
+          {
+            "type": "CreateModel",
+            "name": "PeriodDefinition",
+            "fields": {
+              "template": "ForeignKey(PeriodTemplate)",
+              "number": "IntegerField",
+              "length": "IntegerField(validators=[MinValueValidator(30), MaxValueValidator(120)])",
+              "start": "TimeField",
+              "type": "CharField(max_length=10)",
+              "passing": "IntegerField(validators=[MinValueValidator(0), MaxValueValidator(30)])",
+              "meta": "JSONField(default=dict)"
+            },
+            "options": {
+              "ordering": ["template", "start"],
+              "indexes": [
+                {"fields": ["template", "start"]},
+                {"fields": ["template", "number"]}
+              ],
+              "constraints": [
+                {
+                  "type": "UniqueConstraint",
+                  "fields": ["template", "number"],
+                  "name": "unique_period_per_template"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "update_period_template",
+        "type": "model",
+        "dependencies": ["create_period_definition"],
+        "operations": [
+          {
+            "type": "RemoveField",
+            "model": "PeriodTemplate",
+            "fields": [
+              "period_length",
+              "morning_periods",
+              "afternoon_periods",
+              "evening_periods"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "implementation": {
+    "steps": [
+      {
+        "phase": "pre_migration",
+        "operations": [
+          "backup_database",
+          "verify_no_conflicts"
+        ]
+      },
+      {
+        "phase": "migration",
+        "operations": [
+          "run_create_period_definition",
+          "run_update_period_template"
+        ]
+      },
+      {
+        "phase": "post_migration",
+        "operations": [
+          "verify_data_integrity",
+          "update_cache_keys",
+          "run_tests"
+        ]
+      }
+    ]
+  },
+  "verification": {
+    "checks": [
+      {
+        "type": "model_integrity",
+        "target": "PeriodDefinition",
+        "assertions": [
+          "table_exists",
+          "fields_match_spec",
+          "constraints_active"
+        ]
+      },
+      {
+        "type": "data_integrity",
+        "target": "PeriodTemplate",
+        "assertions": [
+          "no_orphaned_records",
+          "valid_relationships"
+        ]
+      }
+    ]
+  },
+  "rollback": {
+    "steps": [
+      {
+        "phase": "pre_rollback",
+        "operations": [
+          "verify_backup",
+          "stop_services"
+        ]
+      },
+      {
+        "phase": "rollback",
+        "operations": [
+          "restore_database",
+          "verify_restore"
+        ]
+      },
+      {
+        "phase": "post_rollback",
+        "operations": [
+          "start_services",
+          "verify_functionality"
+        ]
+      }
+    ]
+  },
+  "testing": {
+    "suites": [
+      {
+        "name": "migration_tests",
+        "cases": [
+          "test_model_creation",
+          "test_field_constraints",
+          "test_data_integrity"
+        ]
+      },
+      {
+        "name": "rollback_tests",
+        "cases": [
+          "test_backup_restore",
+          "test_system_state"
+        ]
+      }
+    ]
+  }
+}

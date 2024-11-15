@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "type": "validation_vector",
+    "version": "1.0",
+    "context": "period_definition",
+    "related_specs": ["period_template_creation_vector.json"],
+    "priority": "high",
+    "complexity": "medium",
+    "timeline": "day_1"
+  },
+  "validation_rules": {
+    "period": {
+      "field_rules": {
+        "length": {
+          "type": "range",
+          "min": 30,
+          "max": 120,
+          "error": "Period length must be between 30-120 minutes"
+        },
+        "passing": {
+          "type": "range",
+          "min": 0,
+          "max": 30,
+          "optional": true,
+          "error": "Passing time must be between 0-30 minutes"
+        },
+        "start": {
+          "type": "time",
+          "format": "HH:MM",
+          "error": "Invalid start time format"
+        },
+        "number": {
+          "type": "integer",
+          "min": 1,
+          "error": "Period number must be positive"
+        },
+        "type": {
+          "type": "string",
+          "max_length": 10,
+          "error": "Invalid period type"
+        }
+      },
+      "relation_rules": {
+        "overlap": {
+          "check": "time_range_overlap",
+          "fields": ["start", "length"],
+          "error": "Periods cannot overlap"
+        },
+        "unique_number": {
+          "check": "unique_together",
+          "fields": ["template", "number"],
+          "error": "Period numbers must be unique within template"
+        }
+      }
+    },
+    "sequence": {
+      "gap_allowed": true,
+      "require_ordered": true,
+      "error": "Periods must be ordered by start time"
+    }
+  },
+  "implementation": {
+    "methods": {
+      "validate_period": {
+        "input": ["period_data"],
+        "steps": [
+          {"op": "validate_fields", "rules": "field_rules"},
+          {"op": "validate_relations", "rules": "relation_rules"},
+          {"op": "validate_sequence", "rules": "sequence"}
+        ]
+      },
+      "validate_periods": {
+        "input": ["period_data_list"],
+        "steps": [
+          {"op": "map", "method": "validate_period"},
+          {"op": "validate_collection", "rules": "sequence"}
+        ]
+      }
+    },
+    "dependencies": {
+      "imports": ["ValidationError", "time", "datetime"],
+      "utils": ["time_range_overlap"]
+    }
+  },
+  "error_handling": {
+    "strategy": "fail_fast",
+    "aggregation": false,
+    "error_format": {
+      "code": "string",
+      "message": "string",
+      "field": "string?",
+      "value": "any?"
+    }
+  },
+  "tests": {
+    "cases": [
+      {
+        "name": "valid_period",
+        "input": {
+          "number": 1,
+          "length": 45,
+          "start": "08:00",
+          "type": "CLASS"
+        },
+        "expect": "success"
+      },
+      {
+        "name": "invalid_length",
+        "input": {
+          "number": 1,
+          "length": 150,
+          "start": "08:00",
+          "type": "CLASS"
+        },
+        "expect": "ValidationError"
+      },
+      {
+        "name": "period_overlap",
+        "input": [
+          {
+            "number": 1,
+            "length": 45,
+            "start": "08:00",
+            "type": "CLASS"
+          },
+          {
+            "number": 2,
+            "length": 45,
+            "start": "08:30",
+            "type": "CLASS"
+          }
+        ],
+        "expect": "ValidationError"
+      }
+    ]
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "meta": {
+    "type": "cache_vector",
+    "version": "1.0",
+    "context": "period_definition",
+    "related_specs": [
+      "period_template_creation_vector.json",
+      "period_validation_vector.json"
+    ],
+    "priority": "high",
+    "complexity": "medium",
+    "timeline": "day_1"
+  },
+  "cache_strategy": {
+    "keys": {
+      "period": {
+        "pattern": "period:def:{template_id}:{number}",
+        "ttl": 3600,
+        "tags": ["period", "template"]
+      },
+      "template_periods": {
+        "pattern": "template:{template_id}:periods",
+        "ttl": 3600,
+        "tags": ["template"]
+      },
+      "daily_schedule": {
+        "pattern": "schedule:{date}:{template_id}",
+        "ttl": 86400,
+        "tags": ["schedule"]
+      }
+    },
+    "invalidation": {
+      "triggers": {
+        "period_save": {
+          "invalidate": [
+            "period",
+            "template_periods",
+            "daily_schedule"
+          ]
+        },
+        "period_delete": {
+          "invalidate": [
+            "period",
+            "template_periods",
+            "daily_schedule"
+          ]
+        },
+        "template_update": {
+          "invalidate": [
+            "template_periods",
+            "daily_schedule"
+          ]
+        }
+      }
+    }
+  },
+  "implementation": {
+    "methods": {
+      "get_period_cache_key": {
+        "args": ["template_id", "number"],
+        "returns": "string"
+      },
+      "get_template_periods_key": {
+        "args": ["template_id"],
+        "returns": "string"
+      },
+      "get_daily_schedule_key": {
+        "args": ["date", "template_id"],
+        "returns": "string"
+      },
+      "invalidate_period": {
+        "args": ["period"],
+        "steps": [
+          "delete_period_cache",
+          "delete_template_periods",
+          "delete_related_schedules"
+        ]
+      }
+    },
+    "model_integration": {
+      "save": {
+        "pre_save": [],
+        "post_save": ["invalidate_period"]
+      },
+      "delete": {
+        "pre_delete": ["invalidate_period"],
+        "post_delete": []
+      }
+    }
+  },
+  "performance": {
+    "batch_operations": {
+      "bulk_create": {
+        "strategy": "delay_invalidation",
+        "batch_size": 100
+      },
+      "bulk_update": {
+        "strategy": "delay_invalidation",
+        "batch_size": 100
+      }
+    },
+    "optimization": {
+      "cache_warming": {
+        "enabled": true,
+        "triggers": ["template_save", "daily_rebuild"]
+      },
+      "prefetch": {
+        "template_periods": true,
+        "related_schedules": false
+      }
+    }
+  },
+  "monitoring": {
+    "metrics": [
+      {"name": "cache_hit_rate", "type": "gauge"},
+      {"name": "invalidation_count", "type": "counter"},
+      {"name": "cache_size", "type": "gauge"}
+    ],
+    "alerts": {
+      "low_hit_rate": {
+        "threshold": 0.8,
+        "window": "1h"
+      },
+      "high_invalidation": {
+        "threshold": 1000,
+        "window": "5m"
+      }
+    }
+  },
+  "tests": {
+    "cases": [
+      {
+        "name": "period_cache_invalidation",
+        "steps": [
+          "cache_period",
+          "update_period",
+          "verify_cache_invalid"
+        ]
+      },
+      {
+        "name": "template_cache_cascade",
+        "steps": [
+          "cache_template_periods",
+          "update_period",
+          "verify_template_cache_invalid"
+        ]
+      },
+      {
+        "name": "bulk_operation_handling",
+        "steps": [
+          "cache_multiple_periods",
+          "bulk_update_periods",
+          "verify_cache_state"
+        ]
+      }
+    ]
+  }
+}
