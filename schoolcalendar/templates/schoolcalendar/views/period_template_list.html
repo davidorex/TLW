@@ -1,0 +1,55 @@
+{% extends "schoolcalendar/base/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Period Templates" %}{% endblock %}
+
+{% block content %}
+<div class="period-templates">
+    <div class="page-header">
+        <h1>{% trans "Period Templates" %}</h1>
+        <a href="{% url 'schoolcalendar:periodtemplate-create' %}" class="btn btn-primary" hx-get="{% url 'schoolcalendar:periodtemplate-create' %}" hx-target=".period-templates">
+            {% trans "Create New Template" %}
+        </a>
+    </div>
+
+    <div class="template-grid" hx-get="{% url 'schoolcalendar:periodtemplate-list' %}" hx-trigger="load" hx-target=".template-grid">
+        {% for template in templates %}
+            <div class="template-card">
+                <div class="template-card-header">
+                    <h3>{{ template.name }}</h3>
+                    <span class="schedule-type">{{ template.schedule_type }}</span>
+                </div>
+                
+                <div class="template-card-body">
+                    <div class="template-info">
+                        <p>{% trans "Effective From" %}: {{ template.effective_from|date:"Y-m-d" }}</p>
+                        <div class="periods-info">
+                            <span>{% trans "Morning" %}: {{ template.morning_periods }}</span>
+                            <span>{% trans "Afternoon" %}: {{ template.afternoon_periods }}</span>
+                            <span>{% trans "Evening" %}: {{ template.evening_periods }}</span>
+                        </div>
+                        <p>{% trans "Period Length" %}: {{ template.period_length }} {% trans "mins" %}</p>
+                        <p>{% trans "Passing Time" %}: {{ template.passing_time }} {% trans "mins" %}</p>
+                    </div>
+                </div>
+
+                <div class="template-card-footer">
+                    <a href="{% url 'schoolcalendar:periodtemplate-detail' template.pk %}" class="btn btn-secondary" hx-get="{% url 'schoolcalendar:periodtemplate-detail' template.pk %}" hx-target=".period-templates">
+                        {% trans "View Details" %}
+                    </a>
+                    <a href="{% url 'schoolcalendar:periodtemplate-update' template.pk %}" class="btn btn-primary" hx-get="{% url 'schoolcalendar:periodtemplate-update' template.pk %}" hx-target=".period-templates">
+                        {% trans "Edit" %}
+                    </a>
+                </div>
+            </div>
+        {% empty %}
+            <div class="empty-state">
+                <p>{% trans "No period templates found." %}</p>
+                <a href="{% url 'schoolcalendar:periodtemplate-create' %}" class="btn btn-primary" hx-get="{% url 'schoolcalendar:periodtemplate-create' %}" hx-target=".period-templates">
+                    {% trans "Create First Template" %}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

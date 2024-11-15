@@ -1,0 +1,12 @@
+{% if periods %}
+    <div class="calendar-grid">
+        {% for period in periods %}
+            <div class="calendar-cell">
+                <span class="time">{{ period.start_time|time:"H:i" }} - {{ period.end_time|time:"H:i" }}</span>
+                <span class="label">{{ period.name }}</span>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No periods scheduled for this time frame.</p>
+{% endif %}

@@ -1,44 +1,10 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}School Calendar{% endblock %}</title>
-    
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'css/components.css' %}">
-    
-    {% block extra_head %}
-    <!-- Placeholder for additional head content -->
-    {% endblock %}
-</head>
-<body>
-    <header>
-        {% block header %}
-        <nav>
-            <h1>School Calendar System</h1>
-        </nav>
-        {% endblock %}
-    </header>
 
-    <main>
-        {% block content %}
-        <!-- Main content will be inserted by child templates -->
-        {% endblock %}
-    </main>
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/components.css' %}">
+{% endblock %}
 
-    <footer>
-        {% block footer %}
-        <p>&copy; {% now "Y" %} Learning Workshop</p>
-        {% endblock %}
-    </footer>
-
-    <script src="{% static 'js/utils.js' %}"></script>
-    <script src="{% static 'js/api.js' %}"></script>
-    
-    {% block extra_scripts %}
-    <!-- Placeholder for additional scripts -->
-    {% endblock %}
-</body>
-</html>
+{% block content %}
+<!-- Calendar-specific content will be inserted here -->
+{% endblock %}

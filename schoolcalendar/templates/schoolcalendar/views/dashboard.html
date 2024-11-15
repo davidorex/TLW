@@ -1,11 +1,27 @@
 {% extends "schoolcalendar/base/base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="dashboard">
-    <h1>Dashboard</h1>
-    <div class="dashboard-section">
-        {% include "schoolcalendar/components/period_template_manager.html" %}
+    <div class="dashboard-nav container">
+        <h1>Dashboard</h1>
+        <div class="calendar-controls">
+            <button hx-get="{% url 'schoolcalendar:prev_month' %}" hx-target="#calendar-container" class="btn btn-primary">Previous</button>
+            <span class="current-month">{{ current_month }} {{ current_year }}</span>
+            <button hx-get="{% url 'schoolcalendar:next_month' %}" hx-target="#calendar-container" class="btn btn-primary">Next</button>
+            <div class="view-controls">
+                <button hx-get="{% url 'schoolcalendar:day_view' %}" hx-target="#calendar-container" class="btn btn-secondary" data-view="day">Day</button>
+                <button hx-get="{% url 'schoolcalendar:week_view' %}" hx-target="#calendar-container" class="btn btn-secondary" data-view="week">Week</button>
+                <button hx-get="{% url 'schoolcalendar:month_view' %}" hx-target="#calendar-container" class="btn btn-secondary" data-view="month">Month</button>
+            </div>
+        </div>
     </div>
-    <!-- Other dashboard components -->
+    <div class="dashboard-content container">
+        <div class="dashboard-section">
+            <div id="calendar-container" class="calendar-widget">
+                {% include "schoolcalendar/partials/calendar_content.html" with periods=periods %}
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

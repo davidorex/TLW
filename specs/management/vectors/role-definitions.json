@@ -1,0 +1,182 @@
+{
+  "version": "1.0.0",
+  "timestamp": "2024-11-14",
+  "roles": {
+    "advisor": {
+      "context_scope": {
+        "primary": ["architecture", "patterns", "strategy"],
+        "references": {
+          "prefix": "adv",
+          "patterns": {
+            "decisions": "d:{key}",
+            "strategies": "s:{key}",
+            "recommendations": "r:{key}"
+          }
+        }
+      },
+      "state_patterns": {
+        "acknowledgments": {
+          "format": "[Strategy: {action}]",
+          "types": ["decision", "recommendation", "review"]
+        },
+        "context_requirements": [
+          "current_architecture",
+          "active_patterns",
+          "strategic_decisions"
+        ]
+      }
+    },
+    "analyst": {
+      "context_scope": {
+        "primary": ["metrics", "performance", "patterns"],
+        "references": {
+          "prefix": "ana",
+          "patterns": {
+            "metrics": "m:{key}",
+            "findings": "f:{key}",
+            "insights": "i:{key}"
+          }
+        }
+      },
+      "state_patterns": {
+        "acknowledgments": {
+          "format": "[Analysis: {action}]",
+          "types": ["measurement", "evaluation", "recommendation"]
+        },
+        "context_requirements": [
+          "performance_metrics",
+          "analysis_patterns",
+          "historical_data"
+        ]
+      }
+    },
+    "coder": {
+      "context_scope": {
+        "primary": ["implementation", "testing", "optimization"],
+        "references": {
+          "prefix": "cod",
+          "patterns": {
+            "functions": "fn:{key}",
+            "tests": "t:{key}",
+            "optimizations": "opt:{key}"
+          }
+        }
+      },
+      "state_patterns": {
+        "acknowledgments": {
+          "format": "[Code: {action}]",
+          "types": ["implementation", "testing", "refactor"]
+        },
+        "context_requirements": [
+          "active_codebase",
+          "test_suite",
+          "optimization_patterns"
+        ]
+      }
+    },
+    "ui_designer": {
+      "context_scope": {
+        "primary": ["components", "interactions", "accessibility"],
+        "references": {
+          "prefix": "uid",
+          "patterns": {
+            "components": "c:{key}",
+            "layouts": "l:{key}",
+            "interactions": "i:{key}",
+            "accessibility": "a11y:{key}"
+          }
+        }
+      },
+      "state_patterns": {
+        "acknowledgments": {
+          "format": "[Design: {action}]",
+          "types": ["component", "layout", "interaction"]
+        },
+        "context_requirements": [
+          "component_library",
+          "design_system",
+          "accessibility_standards"
+        ]
+      }
+    },
+    "compliance_auditor": {
+      "context_scope": {
+        "primary": ["requirements", "standards", "documentation"],
+        "references": {
+          "prefix": "aud",
+          "patterns": {
+            "requirements": "req:{key}",
+            "compliance": "comp:{key}",
+            "risks": "risk:{key}",
+            "mitigations": "mit:{key}"
+          }
+        }
+      },
+      "state_patterns": {
+        "acknowledgments": {
+          "format": "[Audit: {action}]",
+          "types": ["validation", "assessment", "documentation"]
+        },
+        "context_requirements": [
+          "compliance_standards",
+          "requirement_specs",
+          "risk_registry"
+        ]
+      }
+    }
+  },
+  "role_transitions": {
+    "patterns": {
+      "pre_switch": {
+        "actions": [
+          "save_role_state",
+          "compress_context",
+          "clear_role_specific"
+        ],
+        "acknowledgments": {
+          "save": "[Saved: {role}_state]",
+          "compress": "[Compressed: {role}_context]",
+          "clear": "[Cleared: role_specific]"
+        }
+      },
+      "post_switch": {
+        "actions": [
+          "load_role_patterns",
+          "restore_context",
+          "verify_state"
+        ],
+        "acknowledgments": {
+          "load": "[Loaded: {role}_patterns]",
+          "restore": "[Context: {role}_ready]",
+          "verify": "[Verified: role_state]"
+        }
+      }
+    },
+    "allowed_transitions": {
+      "advisor": ["analyst", "coder", "ui_designer", "compliance_auditor"],
+      "analyst": ["advisor", "coder", "ui_designer", "compliance_auditor"],
+      "coder": ["advisor", "analyst", "ui_designer", "compliance_auditor"],
+      "ui_designer": ["advisor", "analyst", "coder", "compliance_auditor"],
+      "compliance_auditor": ["advisor", "analyst", "coder", "ui_designer"]
+    }
+  },
+  "integration": {
+    "state_management": {
+      "pattern": "k/p/d/i",
+      "role_state_format": {
+        "k": "role_identifier",
+        "p": "active_patterns",
+        "d": "role_dependencies",
+        "i": "required_interfaces"
+      }
+    },
+    "context_restoration": {
+      "sequence": [
+        "role_specific_state",
+        "shared_context",
+        "role_patterns"
+      ],
+      "progressive_loading": true
+    }
+  }
+}
