@@ -21,7 +21,7 @@
         </h1>
     </div>
 
-    <form method="post" class="form">
+    <form method="post" class="form" hx-post="{% url 'schoolcalendar:periodtemplate-save' %}" hx-target=".period-template-form">
         {% csrf_token %}
         
         <div class="form-section">
@@ -120,4 +120,4 @@
         </div>
     </form>
 </div>
-{% endblock %} 
+{% endblock %}

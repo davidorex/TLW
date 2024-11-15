@@ -1,0 +1,12 @@
+{% if periods_today %}
+    <div class="periods-list">
+        {% for period in periods_today %}
+            <div class="period-block">
+                <h3>Period {{ period.number }}</h3>
+                <p>{{ period.start_time }} - {{ period.end_time }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No periods scheduled for today.</p>
+{% endif %}

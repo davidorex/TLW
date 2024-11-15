@@ -7,7 +7,7 @@
     <h1>School Calendar</h1>
     <p>Version: {{ calendar_version }}</p>
     
-    <div class="calendar-container">
+    <div class="calendar-container" hx-get="{% url 'schoolcalendar:calendar_content' %}" hx-trigger="load" hx-target=".calendar-container">
         <!-- Placeholder for calendar content -->
         <p>Calendar content will be displayed here.</p>
     </div>

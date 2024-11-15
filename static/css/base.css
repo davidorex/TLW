@@ -344,3 +344,21 @@ p { margin-bottom: var(--spacing-unit); }
         background-color: var(--text-color);
     }
 }
+
+/* Period Block Styles */
+.periods-list {
+    width: 100%;
+}
+
+.period-block {
+    background-color: var(--light-color);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-unit) * 2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: var(--spacing-unit);
+}
+
+.period-block h3 {
+    margin: 0 0 var(--spacing-unit);
+}

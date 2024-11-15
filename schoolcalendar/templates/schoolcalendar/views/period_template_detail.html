@@ -48,7 +48,7 @@
         </div>
     </div>
 
-    <div class="schedule-preview">
+    <div class="schedule-preview" hx-get="{% url 'schoolcalendar:daily_schedule_preview' template.pk %}" hx-trigger="load" hx-target=".schedule-preview">
         <h2>{% trans "Daily Schedule Preview" %}</h2>
         <div class="timeline">
             {% for period in template.get_daily_schedule %}
@@ -60,4 +60,4 @@
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}

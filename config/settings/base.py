@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'simple_history',
     'django_filters',
     'crispy_forms',
+    'crispy_bootstrap4',  # Added crispy-bootstrap4
     'allauth',
     'django_extensions',  # Added django-extensions
     
@@ -49,7 +50,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,3 +122,6 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 TEST_DISCOVER_TOP_LEVEL = BASE_DIR
 TEST_DISCOVER_ROOT = BASE_DIR
 TEST_DISCOVER_PATTERN = 'test_*.py'
+
+# Crispy Forms configuration
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

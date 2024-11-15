@@ -1,6 +1,6 @@
 {% load static %}
 
-<div class="period-template-manager" hx-get="{% url 'periodtemplate-list' %}" hx-trigger="load" hx-target="#templateList">
+<div class="period-template-manager" hx-get="{% url 'schoolcalendar:periodtemplate-list' %}" hx-trigger="load" hx-target="#templateList">
     <h2>Period Templates</h2>
     <div id="templateList">
         <!-- Period templates will be dynamically loaded here -->
@@ -25,7 +25,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('/calendar/period-templates/')
+        fetch('/api/period-templates/')
             .then(response => response.json())
             .then(data => renderTemplates(data))
             .catch(error => console.error('Error fetching period templates:', error));

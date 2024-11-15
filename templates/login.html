@@ -1,0 +1,15 @@
+{% extends "schoolcalendar/base/base.html" %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block title %}{% trans "Login" %}{% endblock %}
+
+{% block content %}
+<div class="login-form-container">
+    <h1>{% trans "Login" %}</h1>
+    <form method="post" action="{% url 'login' %}?next={{ request.GET.next }}">
+        {% csrf_token %}
+        {{ form|crispy }}
+    </form>
+</div>
+{% endblock %}

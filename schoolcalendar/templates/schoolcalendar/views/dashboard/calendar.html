@@ -1,0 +1,47 @@
+{% extends "schoolcalendar/views/dashboard.html" %}
+
+{% load static %}
+
+{% block extra_head %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'css/components/calendar.css' %}">
+<script src="{% static 'js/components/Calendar.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-nav container">
+        <h1>Dashboard</h1>
+        <!-- Navigation elements will be populated by router -->
+    </div>
+    <div class="dashboard-content container">
+        <div class="dashboard-section">
+            <div class="calendar-section">
+                <div class="calendar-controls">
+                    <div class="control-group">
+                        <button class="btn btn-primary" id="prev-month">Previous</button>
+                        <span class="current-month"></span>
+                        <button class="btn btn-primary" id="next-month">Next</button>
+                    </div>
+                    <div class="view-controls">
+                        <button class="btn btn-secondary" data-view="month">Month</button>
+                        <button class="btn btn-secondary" data-view="week">Week</button>
+                        <button class="btn btn-secondary" data-view="day">Day</button>
+                    </div>
+                </div>
+                
+                <div id="calendar-container" class="calendar-widget">
+                    <!-- Calendar will be rendered here by Calendar.js -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendar = new CalendarWidget('calendar-container');
+        calendar.init();
+    });
+</script>
+{% endblock %}
