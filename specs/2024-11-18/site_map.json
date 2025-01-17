@@ -1,0 +1,212 @@
+{
+  "project_structure": {
+    "root": {
+      "config/": {
+        "purpose": "Project configuration",
+        "files": {
+          "__init__.py": "Package initialization",
+          "urls.py": "Root URL configuration",
+          "wsgi.py": "WSGI application entry",
+          "asgi.py": "ASGI application entry",
+          "settings/": {
+            "base.py": "Base settings",
+            "dev.py": "Development settings",
+            "prod.py": "Production settings"
+          }
+        }
+      },
+      "core/": {
+        "purpose": "Core functionality and abstractions",
+        "components": {
+          "models/": {
+            "abstracts.py": {
+              "purpose": "Abstract base models",
+              "classes": [
+                "BaseModel",
+                "AuditableModel",
+                "HistoricalModel",
+                "MetadataModel"
+              ]
+            }
+          },
+          "utils/": {
+            "context.py": "Context management utilities",
+            "history.py": "Historical record utilities",
+            "metadata.py": "Metadata validation utilities"
+          },
+          "views/": {
+            "mixins.py": "View mixins"
+          }
+        }
+      },
+      "schoolcalendar/": {
+        "purpose": "Main calendar application",
+        "components": {
+          "models/": {
+            "school_year.py": {
+              "classes": ["SchoolYear"],
+              "relationships": ["has_many Terms"]
+            },
+            "term.py": {
+              "classes": ["Term"],
+              "relationships": [
+                "belongs_to SchoolYear",
+                "has_many Quarters"
+              ]
+            },
+            "quarter.py": {
+              "classes": ["Quarter"],
+              "relationships": [
+                "belongs_to Term",
+                "has_many PeriodTemplates"
+              ]
+            },
+            "period_template.py": {
+              "classes": ["PeriodTemplate"],
+              "relationships": [
+                "belongs_to Quarter",
+                "has_many PeriodContents"
+              ]
+            },
+            "period_content.py": {
+              "classes": ["PeriodContent"],
+              "relationships": ["belongs_to PeriodTemplate"]
+            }
+          },
+          "views/": {
+            "purpose": "View controllers",
+            "components": {
+              "views.py": {
+                "classes": [
+                  "TermViewSet",
+                  "SchoolYearViewSet",
+                  "PeriodTemplateViewSet",
+                  "DashboardView",
+                  "DashboardCalendarView",
+                  "IndexView"
+                ]
+              }
+            }
+          },
+          "templates/": {
+            "purpose": "View templates",
+            "structure": {
+              "base/": "Base templates",
+              "components/": "Reusable components",
+              "views/": {
+                "dashboard.html": "Dashboard base template",
+                "dashboard/": {
+                  "calendar.html": "Calendar view template"
+                }
+              },
+              "partials/": {
+                "calendar_content.html": "HTMX calendar updates",
+                "periods_today.html": "HTMX daily view"
+              }
+            }
+          }
+        }
+      },
+      "static/": {
+        "purpose": "Static assets",
+        "structure": {
+          "css/": {
+            "base.css": "Global styles",
+            "components.css": "Component styles",
+            "dashboard.css": "Dashboard styles"
+          },
+          "js/": {
+            "api.js": "API utilities",
+            "main.js": "Main application logic",
+            "router.js": "Frontend routing",
+            "utils.js": "JavaScript utilities",
+            "components/": {
+              "Calendar.js": "Calendar widget"
+            }
+          }
+        }
+      },
+      "templates/": {
+        "purpose": "Global templates",
+        "files": {
+          "base.html": "Site-wide base template",
+          "index.html": "Homepage template",
+          "login.html": "Authentication template"
+        }
+      }
+    }
+  },
+  "url_structure": {
+    "api/": {
+      "terms/": "Term management endpoints",
+      "school-years/": "School year endpoints",
+      "period-templates/": "Period template endpoints"
+    },
+    "calendar/": {
+      "dashboard/": "Calendar dashboard",
+      "day/": "Daily view",
+      "week/": "Weekly view",
+      "month/": "Monthly view"
+    },
+    "auth/": {
+      "login/": "Authentication endpoints",
+      "logout/": "Session management"
+    }
+  },
+  "data_flow": {
+    "calendar_rendering": {
+      "sequence": [
+        "User requests calendar view",
+        "DashboardCalendarView processes request",
+        "PeriodTemplate.get_active_template retrieves template",
+        "Template generates periods",
+        "calendar_content.html renders view",
+        "Calendar.js handles interactions"
+      ]
+    },
+    "period_management": {
+      "sequence": [
+        "User creates/modifies period",
+        "API endpoint processes request",
+        "PeriodContent validates data",
+        "Database updated",
+        "Cache invalidated",
+        "View refreshed via HTMX"
+      ]
+    }
+  },
+  "technology_stack": {
+    "backend": {
+      "framework": "Django",
+      "key_packages": [
+        "django-rest-framework",
+        "simple-history",
+        "django-model-utils",
+        "django-redis"
+      ]
+    },
+    "frontend": {
+      "frameworks": [
+        "HTMX",
+        "Bootstrap"
+      ],
+      "custom_js": [
+        "Calendar widget",
+        "API utilities",
+        "Router"
+      ]
+    },
+    "database": {
+      "engine": "SQLite",
+      "migrations": "11 migrations defining schema evolution"
+    },
+    "caching": {
+      "strategy": "Local memory cache",
+      "candidates_for_caching": [
+        "Active period templates",
+        "Calendar view data",
+        "User schedules"
+      ]
+    }
+  }
+}

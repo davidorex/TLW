@@ -1,0 +1,222 @@
+{
+  "implementation_directives": {
+    "model_updates": [
+      {
+        "file": "schoolcalendar/models/school_year.py",
+        "changes": [
+          {
+            "type": "inheritance",
+            "from": "models.Model",
+            "to": "core.models.abstracts.MetadataModel",
+            "required_imports": [
+              "from core.models.abstracts import MetadataModel"
+            ]
+          },
+          {
+            "type": "add_metadata_schema",
+            "content": {
+              "METADATA_SCHEMA": {
+                "type": "object",
+                "properties": {
+                  "academic_year": {"type": "string"},
+                  "calendar_type": {"type": "string"},
+                  "notes": {"type": "string"}
+                }
+              }
+            }
+          },
+          {
+            "type": "add_validation",
+            "method": "clean",
+            "content": [
+              "validate start_date before end_date",
+              "validate term_type transitions",
+              "ensure unique academic year"
+            ]
+          }
+        ]
+      },
+      {
+        "file": "schoolcalendar/models/period_content.py",
+        "changes": [
+          {
+            "type": "inheritance",
+            "from": "models.Model",
+            "to": "core.models.abstracts.MetadataModel"
+          },
+          {
+            "type": "implement_methods",
+            "methods": [
+              {
+                "name": "clean",
+                "validation_rules": [
+                  "period_number within template range",
+                  "no scheduling conflicts",
+                  "valid content_type for user"
+                ]
+              },
+              {
+                "name": "resolve_conflicts",
+                "logic": [
+                  "identify overlapping periods",
+                  "apply priority rules",
+                  "notify affected users"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "security_updates": [
+      {
+        "file": "config/settings/base.py",
+        "changes": [
+          {
+            "type": "remove",
+            "content": "SECRET_KEY = 'django-insecure-replace-this-with-your-secret-key'"
+          },
+          {
+            "type": "add",
+            "content": "SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')"
+          },
+          {
+            "type": "add",
+            "content": "ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')"
+          },
+          {
+            "type": "add",
+            "section": "security_middleware",
+            "content": [
+              "SECURE_SSL_REDIRECT = not DEBUG",
+              "SESSION_COOKIE_SECURE = not DEBUG",
+              "CSRF_COOKIE_SECURE = not DEBUG",
+              "SECURE_BROWSER_XSS_FILTER = True",
+              "SECURE_CONTENT_TYPE_NOSNIFF = True"
+            ]
+          }
+        ]
+      }
+    ],
+    "performance_updates": [
+      {
+        "file": "config/settings/base.py",
+        "changes": [
+          {
+            "type": "add",
+            "section": "caching",
+            "content": {
+              "CACHES": {
+                "default": {
+                  "BACKEND": "django_redis.cache.RedisCache",
+                  "LOCATION": "redis://127.0.0.1:6379/1",
+                  "OPTIONS": {
+                    "CLIENT_CLASS": "django_redis.client.DefaultClient"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "file": "schoolcalendar/models/period_template.py",
+        "changes": [
+          {
+            "type": "optimize_queries",
+            "methods": [
+              {
+                "name": "get_active_template",
+                "optimizations": [
+                  "add select_related for foreign keys",
+                  "implement cache versioning",
+                  "add bulk prefetch"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "testing_directives": [
+      {
+        "file": "schoolcalendar/tests/test_models.py",
+        "add_tests": [
+          {
+            "class": "TestSchoolYear",
+            "methods": [
+              "test_date_validation",
+              "test_term_type_transitions",
+              "test_unique_academic_year"
+            ]
+          },
+          {
+            "class": "TestPeriodContent",
+            "methods": [
+              "test_period_validation",
+              "test_conflict_resolution",
+              "test_display_data"
+            ]
+          }
+        ]
+      }
+    ],
+    "documentation_directives": [
+      {
+        "type": "docstrings",
+        "files": [
+          "schoolcalendar/models/*.py",
+          "schoolcalendar/views/*.py"
+        ],
+        "requirements": [
+          "Add class docstrings",
+          "Document public methods",
+          "Add type hints"
+        ]
+      },
+      {
+        "type": "api_docs",
+        "file": "schoolcalendar/api_docs.py",
+        "format": "OpenAPI 3.0",
+        "sections": [
+          "Authentication",
+          "Endpoints",
+          "Models",
+          "Error Responses"
+        ]
+      }
+    ]
+  },
+  "execution_order": [
+    {
+      "phase": 1,
+      "name": "Security Hardening",
+      "files": [
+        "config/settings/base.py"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Model Refactoring",
+      "files": [
+        "schoolcalendar/models/school_year.py",
+        "schoolcalendar/models/period_content.py"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Performance Optimization",
+      "files": [
+        "config/settings/base.py",
+        "schoolcalendar/models/period_template.py"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Testing Implementation",
+      "files": [
+        "schoolcalendar/tests/test_models.py"
+      ]
+    }
+  ]
+}
