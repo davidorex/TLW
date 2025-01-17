@@ -11,7 +11,8 @@ Icon
 .Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
-db_copy.sqlite3
+db copy.sqlite3
+db\ copy.sqlite3
 
 # Python
 *.py[cod]
@@ -33,6 +34,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+period_models.dot
 
 # Django
 *.log
