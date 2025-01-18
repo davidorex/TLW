@@ -13,6 +13,7 @@ Icon
 .com.apple.timemachine.donotpresent
 db copy.sqlite3
 db\ copy.sqlite3
+repo_knowledge.ttl
 
 # Python
 *.py[cod]
